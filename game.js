@@ -300,7 +300,7 @@ function update ()
    menuBack.tilePositionY -= 1;
 
 
-   scoreText.text = "Score: " + Ship.playerShip.score;
+   scoreText.text = "Git Score: " + Ship.playerShip.score;
  
 
     if(gameState == state.Gameplay)
