@@ -114,25 +114,13 @@ function pauseGame()
 function create ()
 {
 
-    // Create layers for UI (no scroll) and game objects like ships
-    this.uiLayer = this.add.layer();
-    this.worldLayer = this.add.layer();
-
-    // Ensure the ship class has access to the worldLayer so it can automatically 
-    Ship.worldLayer = this.worldLayer;
+    
 
 
     background = this.add.tileSprite(500,500,1024,1024,'back');
-    this.worldLayer.add(background);
     background.setScrollFactor(0.1);
 
-    // Don't render UI with a scrolling camera
-    this.cameras.main.ignore(this.uiLayer);
 
-    // Don't render the world with the static camera
-    const UICam = this.cameras.add(0,0,800,600);
-    UICam.ignore(this.worldLayer);
-    
    
     
 
@@ -239,20 +227,20 @@ function create ()
 
 
     // The pause menu
-    menuBack = this.add.tileSprite(500,500,1024,1024,'menuBack'); this.uiLayer.add(menuBack);
-    pauseShade = this.add.rectangle(0, 0, 2000, 2000, 0x336633, .25); this.uiLayer.add(pauseShade);
+    menuBack = this.add.tileSprite(500,500,1024,1024,'menuBack'); 
+    pauseShade = this.add.rectangle(0, 0, 2000, 2000, 0x336633, .25); 
     pauseShade.visible = false;
 
-    gameLogo = this.add.sprite(500,350,'logo'); this.uiLayer.add(gameLogo);
+    gameLogo = this.add.sprite(500,350,'logo'); 
     gameLogo.setScale(0.5);
 
     keys = this.input.keyboard.addKeys('W,S,A,D,F,E,Q,UP,DOWN,SPACE,F1');
-    infoText = this.add.text(10,30,"");  this.uiLayer.add(infoText);
-    helpText = this.add.text(10,10,"Press F1 to toggle help");  this.uiLayer.add(helpText);
+    infoText = this.add.text(10,30,"");  infoText.setScrollFactor(0);
+    helpText = this.add.text(10,10,"Press F1 to toggle help"); helpText.setScrollFactor(0);
     helpText.visible = false; // Don't show the help text in the menu.
-    pauseText = this.add.text(400,400, "Paused - Press escape to unpause");  this.uiLayer.add(pauseText);
+    pauseText = this.add.text(400,400, "Paused - Press escape to unpause");  pauseText.setScrollFactor(0);
 
-    scoreText = this.add.text(750,10,""); this.uiLayer.add(scoreText);
+    scoreText = this.add.text(750,10,""); scoreText.setScrollFactor(0);
     
 
 
@@ -294,7 +282,7 @@ function create ()
 
     console.log('VSCode git integration successful');
 
-    // follow the player around
+    // follow the player around and zoom out
     this.cameras.main.startFollow(Ship.playerShip.sprite);
     
 
