@@ -6,7 +6,7 @@ class Ship
     static playerShip;
 
   static explosionSound;
- 
+  static worldLayer;
 
  
 
@@ -18,7 +18,7 @@ constructor(engine,spriteName,x,y,isEnemy)
     this.bullet = [];
     for(let i = 0; i< 10;i++)
     {
-    this.bullet[i] = engine.physics.add.sprite(x,y, "pew").setCircle(256/2,0,256/2 - 256/2);
+    this.bullet[i] = engine.physics.add.sprite(x,y, "pew").setCircle(256/2,0,256/2 - 256/2); Ship.worldLayer.add(this.bullet[i]);
     if(isEnemy) {this.bullet[i].tint = 0xFF6666;}
     this.bullet[i].setScale(0.25);
     this.bullet[i].x = -400;
@@ -36,14 +36,16 @@ constructor(engine,spriteName,x,y,isEnemy)
     // The actual ship's sprite 
     this.sprite = engine.physics.add.sprite(x,y, spriteName);
 
+    // Make sure you are rendered to the world layer
+   Ship.worldLayer.add(this.sprite);
+
     // -- Get the measurements of the ship spread and create a hit circle 
     let w = this.sprite.displayWidth;
     let h = this.sprite.displayHeight;
 
     this.sprite.setCircle(w /2,0,h/2 - w/2);
     
-    // -- Enemies don't collide with the sides, that way they can 'spawn' from the north
-    if(!isEnemy) {this.sprite.body.setCollideWorldBounds(true);}
+
     this.sprite.body.setBounce(10,10); // Ships should bounce enough off each other to prevent "rubbing"
     
     this.sprite.setScale(0.5);
@@ -84,15 +86,17 @@ constructor(engine,spriteName,x,y,isEnemy)
 
    // set hp
    this.sprite.hp = 100;
-   this.hpBarBack = engine.add.rectangle(0, 0, this.sprite.displayWidth, 10, 0x000000, 1);
-   this.hpBarFront = engine.add.rectangle(0, 0, this.sprite.displayWidth, 5, 0x336633, 1);
+   this.hpBarBack = engine.add.rectangle(0, 0, this.sprite.displayWidth, 10, 0x000000, 1); Ship.worldLayer.add(this.hpBarBack);
+   this.hpBarFront = engine.add.rectangle(0, 0, this.sprite.displayWidth, 5, 0x336633, 1); Ship.worldLayer.add(this.hpBarFront);
    
    // Setup explosion effect
-   this.explosion = engine.add.sprite(-400,-400, 'boom14');
-   this.explosion.setScale(0.25);
+   this.explosion = engine.add.sprite(-400,-400, 'boom14'); Ship.worldLayer.add(this.explosion);
+   this.explosion.setScale(0.25); 
 
    
    this.sprite.tintTick = 255;
+
+   
 }
 shoot()
 {
@@ -133,7 +137,11 @@ right()
 }
 forward()
 {
-    this.tY = -Ship.BIG_THRUST;
+    let v = new Phaser.Math.Vector2(0,-Ship.BIG_THRUST);
+    v.rotate(Phaser.Math.DegToRad(this.sprite.angle));
+
+    this.tX = v.x;
+    this.tY = v.y;
 }
 back()
 {

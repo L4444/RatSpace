@@ -113,7 +113,25 @@ function pauseGame()
 
 function create ()
 {
+
+    // Create layers for UI (no scroll) and game objects like ships
+    this.uiLayer = this.add.layer();
+    this.worldLayer = this.add.layer();
+
+    // Ensure the ship class has access to the worldLayer so it can automatically 
+    Ship.worldLayer = this.worldLayer;
+
+
     background = this.add.tileSprite(500,500,1024,1024,'back');
+    this.worldLayer.add(background);
+    background.setScrollFactor(0.1);
+
+    // Don't render UI with a scrolling camera
+    this.cameras.main.ignore(this.uiLayer);
+
+    // Don't render the world with the static camera
+    const UICam = this.cameras.add(0,0,800,600);
+    UICam.ignore(this.worldLayer);
     
    
     
@@ -221,20 +239,20 @@ function create ()
 
 
     // The pause menu
-    menuBack = this.add.tileSprite(500,500,1024,1024,'menuBack');
-    pauseShade = this.add.rectangle(0, 0, 2000, 2000, 0x336633, .25);
+    menuBack = this.add.tileSprite(500,500,1024,1024,'menuBack'); this.uiLayer.add(menuBack);
+    pauseShade = this.add.rectangle(0, 0, 2000, 2000, 0x336633, .25); this.uiLayer.add(pauseShade);
     pauseShade.visible = false;
 
-    gameLogo = this.add.sprite(500,350,'logo');
+    gameLogo = this.add.sprite(500,350,'logo'); this.uiLayer.add(gameLogo);
     gameLogo.setScale(0.5);
 
     keys = this.input.keyboard.addKeys('W,S,A,D,F,E,Q,UP,DOWN,SPACE,F1');
-    infoText = this.add.text(10,30,"");
-    helpText = this.add.text(10,10,"Press F1 to toggle help");
+    infoText = this.add.text(10,30,"");  this.uiLayer.add(infoText);
+    helpText = this.add.text(10,10,"Press F1 to toggle help");  this.uiLayer.add(helpText);
     helpText.visible = false; // Don't show the help text in the menu.
-    pauseText = this.add.text(400,400, "Paused - Press escape to unpause");
+    pauseText = this.add.text(400,400, "Paused - Press escape to unpause");  this.uiLayer.add(pauseText);
 
-    scoreText = this.add.text(750,10,"");
+    scoreText = this.add.text(750,10,""); this.uiLayer.add(scoreText);
     
 
 
@@ -276,7 +294,8 @@ function create ()
 
     console.log('VSCode git integration successful');
 
-    
+    // follow the player around
+    this.cameras.main.startFollow(Ship.playerShip.sprite);
     
 
     
@@ -293,8 +312,8 @@ function update ()
    // Cheesy scrolling background
    menuBack.tilePositionY -= 1;
 
-   // Move the camera
-  //  this.cameras.main.setPosition(Ship.playerShip.x,Ship.playerShip.y);
+   
+    
 
    
    scoreText.text = "Score: " + Ship.playerShip.score;
@@ -325,7 +344,7 @@ function update ()
 
         // Angle the ship to "look at" the cursor, Cursor aiming
         let targetAngle = Phaser.Math.RadToDeg(
-            Phaser.Math.Angle.Between(player.sprite.x, player.sprite.y, game.input.mousePointer.x,game.input.mousePointer.y)
+            Phaser.Math.Angle.Between(450,450, game.input.mousePointer.x,game.input.mousePointer.y)
         ) + 90; // The +90 is to ensure it points forward rather than to the right.
         
 
@@ -358,7 +377,7 @@ function update ()
 
 
         // Cheesy scrolling background
-        background.tilePositionY -= 2;
+        //background.tilePositionY -= 2;
     }
 
 }
