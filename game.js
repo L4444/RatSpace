@@ -55,11 +55,11 @@ var gameState;
 
 function preload ()
 {
-    this.load.image('player','ships/1B.png');
-    this.load.image('enemy1','ships/2.png');
-    this.load.image('enemy2','ships/3.png');
-    this.load.image('enemy3','ships/8.png');
-    this.load.image('enemy4','ships/10.png');
+    this.load.image('player','ships/player/blueship2.png');
+    this.load.image('enemy1','ships/empire/cargoship.png');
+    this.load.image('enemy2','ships/empire/carrier.png');
+    this.load.image('enemy3','ships/empire/cruiser.png');
+    this.load.image('enemy4','ships/empire/destroyer.png');
 
     this.load.image('back','Backgrounds/Blue Nebula/Blue Nebula 1 - 1024x1024.png');
     this.load.image('menuBack','Backgrounds/Green Nebula/Green Nebula 7 - 1024x1024.png');
@@ -270,13 +270,7 @@ function create ()
     
     // Start game
     gameState = state.Menu;
-    
-    // I am not sure why I have to play/pause these?
-    menuMusic.play();
-    menuMusic.pause();
 
-    battleMusic.play();
-    battleMusic.pause();
 
     Ship.playerShip.score = 0;
 
@@ -299,8 +293,11 @@ function update ()
    // Cheesy scrolling background
    menuBack.tilePositionY -= 1;
 
+   // Move the camera
+  //  this.cameras.main.setPosition(Ship.playerShip.x,Ship.playerShip.y);
 
-   scoreText.text = "Git Score: " + Ship.playerShip.score;
+   
+   scoreText.text = "Score: " + Ship.playerShip.score;
  
 
     if(gameState == state.Gameplay)

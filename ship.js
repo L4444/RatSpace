@@ -241,14 +241,16 @@ doAI()
 
     if(this.sprite.x > 750) {this.spaceInvaderRight = false; }
     if(this.sprite.x < 150) {this.spaceInvaderRight = true; }
-    if(this.sprite.y < this.targetY -30) {this.back();}
-    if(this.sprite.y > this.targetY+30) {this.forward();}
+
+    // disable moving/shooting for testing
+    //if(this.sprite.y < this.targetY -30) {this.back();}
+    //if(this.sprite.y > this.targetY+30) {this.forward();}
 
 
-    if(Math.floor(Math.random() * 40) == 1 && this.sprite.y > 0)  {this.shoot();}
+    //if(Math.floor(Math.random() * 40) == 1 && this.sprite.y > 0)  {this.shoot();}
     
 
-    if(this.spaceInvaderRight) {this.right();} else {this.left();}
+    //if(this.spaceInvaderRight) {this.right();} else {this.left();}
 
 
     this.sprite.angle = Phaser.Math.RadToDeg(
