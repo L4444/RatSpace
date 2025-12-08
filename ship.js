@@ -1,6 +1,6 @@
 class Ship
 {
-    static BIG_THRUST = 5000;
+    static BIG_THRUST = 600;
     static LITTLE_THRUST = 5.0; 
     static MAX_SPEED = 600;
     static playerShip;
@@ -21,8 +21,8 @@ constructor(engine,spriteName,x,y,isEnemy)
     this.bullet[i] = engine.physics.add.sprite(x,y, "pew").setCircle(256/2,0,256/2 - 256/2); 
     if(isEnemy) {this.bullet[i].tint = 0xFF6666;}
     this.bullet[i].setScale(0.25);
-    this.bullet[i].x = -400;
-    this.bullet[i].y = -400;
+    this.bullet[i].x = -9999;
+    this.bullet[i].y = -9999;
 
     
       
@@ -54,7 +54,7 @@ constructor(engine,spriteName,x,y,isEnemy)
     this.sprite.setDamping(true); 
     this.sprite.setDrag(0.2); 
 
-    // This prevents ships from flying off
+    // This prevents ships from moving at a speed that the player cannot control
     this.sprite.body.setMaxSpeed(Ship.MAX_SPEED);
 
 
@@ -96,8 +96,8 @@ constructor(engine,spriteName,x,y,isEnemy)
    this.hpBarBack = engine.add.rectangle(0, 0, this.sprite.displayWidth, 10, 0x000000, 1); 
    this.hpBarFront = engine.add.rectangle(0, 0, this.sprite.displayWidth, 5, 0x336633, 1); 
    // Setup explosion effect
-   this.explosion = engine.add.sprite(-400,-400, 'boom14');
-   this.explosion.setScale(0.25); 
+   this.explosion = engine.add.sprite(-9999,-9999, 'boom14');
+   this.explosion.setScale(0.5); 
 
    
    this.sprite.tintTick = 255;
@@ -135,35 +135,35 @@ shoot()
 }
 left()
 {
-     let v = new Phaser.Math.Vector2(-Ship.BIG_THRUST /10 ,0);
+     let v = new Phaser.Math.Vector2(-Ship.BIG_THRUST ,0);
     v.rotate(Phaser.Math.DegToRad(this.sprite.angle));
 
-    this.tX = v.x;
-    this.tY = v.y;
+    this.tX += v.x;
+    this.tY += v.y;
 }
 right()
 {
-     let v = new Phaser.Math.Vector2(Ship.BIG_THRUST/10,0);
+     let v = new Phaser.Math.Vector2(Ship.BIG_THRUST,0);
     v.rotate(Phaser.Math.DegToRad(this.sprite.angle));
 
-    this.tX = v.x;
-    this.tY = v.y;
+    this.tX += v.x;
+    this.tY += v.y;
 }
 forward()
 {
     let v = new Phaser.Math.Vector2(0,-Ship.BIG_THRUST);
     v.rotate(Phaser.Math.DegToRad(this.sprite.angle));
 
-    this.tX = v.x;
-    this.tY = v.y;
+    this.tX += v.x;
+    this.tY += v.y;
 }
 back()
 {
-     let v = new Phaser.Math.Vector2(0,Ship.BIG_THRUST/10);
+     let v = new Phaser.Math.Vector2(0,Ship.BIG_THRUST);
     v.rotate(Phaser.Math.DegToRad(this.sprite.angle));
 
-    this.tX = v.x;
-    this.tY = v.y;
+    this.tX += v.x;
+    this.tY += v.y;
 }
 update()
 {
@@ -195,8 +195,8 @@ update()
 
           if(this.isEnemy)
           {
-            this.sprite.x = 300;
-            this.sprite.y = -3000;
+            this.sprite.x = 0;
+            this.sprite.y = -1000;
             Ship.playerShip.score += 100;
 
            

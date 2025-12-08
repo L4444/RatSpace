@@ -202,7 +202,7 @@ function create ()
         hitShip.tintTick = 0;
         hitShip.hp -= 20;
         //if(hitShip.hp > 0) {hitShip.hitSound.play();} /// This is a horrible sound
-        hitBullet.x = -400; hitBullet.y = -400; 
+        hitBullet.x = -9999; hitBullet.y = -9999; 
         hitShip.setVelocity(hitBullet.body.velocity.x*10,hitBullet.body.velocity.y*10); 
         hitBullet.setVelocity(0,0);}); 
         }
@@ -220,7 +220,7 @@ function create ()
                 hitShip.tintTick = 0;
                 hitShip.hp -= 50;
                 if(hitShip.hp > 0) {hitShip.hitSound.play();}
-                hitBullet.x = -400; hitBullet.y = -400; 
+                hitBullet.x = -9999; hitBullet.y = -9999; 
                 hitShip.setVelocity(hitBullet.body.velocity.x*400,hitBullet.body.velocity.y*400); 
                 hitBullet.setVelocity(0,0);}); 
         }
