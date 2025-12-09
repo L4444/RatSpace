@@ -44,7 +44,9 @@ var gameLogo;
 var scoreText;
 
 
-var boom;
+var cameraX;
+var cameraY;
+
 
 const state = {
  Menu: 'Menu',
@@ -284,7 +286,10 @@ function create ()
     console.log('VSCode git integration successful');
 
     // follow the player around and zoom out
-    this.cameras.main.startFollow(Ship.playerShip.sprite);
+    //this.cameras.main.startFollow(Ship.playerShip.sprite);
+
+    cameraX = 0;
+    cameraY = 0;
     
  
 
@@ -324,15 +329,15 @@ function update ()
         // Zoom controls
         if(keys.F.isDown)
         {
-               this.cameras.main.setZoom(0.5);
+            
         }
          if(keys.G.isDown)
         {
-               this.cameras.main.setZoom(1);
+            
         }
           if(keys.H.isDown)
         {
-               this.cameras.main.setZoom(2);
+         
         }
         
 
@@ -355,11 +360,14 @@ function update ()
         // TEST: Just set it
         player.sprite.angle = targetAngle;
 
+        let cursorX = game.input.mousePointer.x;
+        let cursorY = game.input.mousePointer.y;
+
         // Present debug info
         infoText.setText("Big thrust is " + Ship.BIG_THRUST + "\nand Little thrust is " + Ship.LITTLE_THRUST 
         + "\nVelX = " + player.sprite.body.velocity.x + "\nVelY = " + player.sprite.body.velocity.y + 
         "\ntX: " + player.tX + "\ntY: " + player.tY +
-        "\nCursorX: " + game.input.mousePointer.x + "\nCursorY: " + game.input.mousePointer.y + 
+        "\nCursorX: " + cursorX + "\nCursorY: " + cursorY + 
         "\ntargetAngle: " + targetAngle + "\nPlayer Angle: " + player.sprite.angle + 
         "\nMousebuttons: " + game.input.mousePointer.buttons + "\n------------Controls---------- \nW,S,A,D for movement" 
         + "\nleft click for shoot \n1 for menu music \n2 for battle music \n3 for stealth music \n4 for boss music \nUP, DOWN, E and Q to play with physics");
@@ -377,9 +385,21 @@ function update ()
             
         }
 
+        // The camera target is where the camera should be, taking into account the cursor
+        let cameraTarget = {};
+        cameraTarget.x = player.sprite.x -900 + cursorX;
+        cameraTarget.y = player.sprite.y -900 + cursorY;
 
-        // Cheesy scrolling background
-        //background.tilePositionY -= 2;
+        // move the actual camera focus to the target vector, very smoothly 
+        cameraX -= (cameraX - cameraTarget.x) / 20;
+        cameraY -= (cameraY - cameraTarget.y) / 20;
+
+        this.cameras.main.setScroll(cameraX, cameraY);
+
+
+
+
+        
     }
 
 }
