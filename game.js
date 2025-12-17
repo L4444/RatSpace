@@ -186,7 +186,7 @@ function create() {
     }
 
     // collide with asteroid
-    this.physics.add.collider(player.sprite, asteroid, function (pShip, eShip, body1, body2) {
+    this.physics.add.collider(player, asteroid, function (pShip, eShip, body1, body2) {
             console.log("Player hit asteroid ");
         });
 
@@ -199,7 +199,7 @@ function create() {
 
 
         // Collide with the player
-        this.physics.add.collider(player.sprite, enemy[i].sprite, function (pShip, eShip, body1, body2) {
+        this.physics.add.collider(player, enemy[i], function (pShip, eShip, body1, body2) {
             pShip.hp -= 10; eShip.hp -= 10;
             if (pShip.hp > 0) { pShip.hitSound.play(); }
         });
@@ -209,7 +209,7 @@ function create() {
     // Collide with other enemies
     for (let i = 0; i < enemy.length; i++) {
         for (let j = i; j < enemy.length; j++) {
-            this.physics.add.collider(enemy[i].sprite, enemy[j].sprite, function (aShip, bShip, body1, body2) {
+            this.physics.add.collider(enemy[i], enemy[j], function (aShip, bShip, body1, body2) {
                 //aShip.hp -= 5; bShip.hp -= 5; 
                 console.log('one bounce');
 
@@ -221,7 +221,7 @@ function create() {
     for (let i = 0; i < enemy.length; i++) {
 
         for (let j = 0; j < enemy[i].bullet.length; j++) {
-            this.physics.add.overlap(player.sprite, enemy[i].bullet[j], function (hitShip, hitBullet, body1, body2) {
+            this.physics.add.overlap(player, enemy[i].bullet[j], function (hitShip, hitBullet, body1, body2) {
                 console.log('Player hit');
                 hitShip.tintTick = 0;
                 hitShip.hp -= 20;
@@ -238,7 +238,7 @@ function create() {
     for (let i = 0; i < enemy.length; i++) {
 
         for (let j = 0; j < player.bullet.length; j++) {
-            this.physics.add.overlap(enemy[i].sprite, player.bullet[j], function (hitShip, hitBullet, body1, body2) {
+            this.physics.add.overlap(enemy[i], player.bullet[j], function (hitShip, hitBullet, body1, body2) {
                 console.log('Enemy hit');
                 hitShip.tintTick = 0;
                 hitShip.hp -= 50;
@@ -397,11 +397,11 @@ function update() {
         let pointer = this.input.activePointer;
         let worldCursor = pointer.positionToCamera(this.cameras.main);
        
-        let targetAngle = Phaser.Math.Angle.Between(player.sprite.x , player.sprite.y , worldCursor.x, worldCursor.y);
+        let targetAngle = Phaser.Math.Angle.Between(player.x , player.y , worldCursor.x, worldCursor.y);
 
         // Turn to face the targetAngle
         let turnSpeed = 0.02;
-        player.sprite.rotation = Phaser.Math.Angle.RotateTo(player.sprite.rotation, targetAngle, turnSpeed);
+        player.rotation = Phaser.Math.Angle.RotateTo(player.rotation, targetAngle, turnSpeed);
 
 
 
@@ -422,13 +422,13 @@ function update() {
                 infoText.setText("-------------DEBUG-------------\n" 
                     + "(LEFT / RIGHT) Big thrust is " + Ship.BIG_THRUST + "\n"
                     + "(UP / DOWN) Max Speed is " + Ship.MAX_SPEED + "\n"
-                + "VelX = " + player.sprite.body.velocity.x + "\nVelY = " + player.sprite.body.velocity.y +
+                + "VelX = " + player.body.velocity.x + "\nVelY = " + player.body.velocity.y +
                 "\ntX: " + player.tX + "\ntY: " + player.tY +
                 "\nCursorX: " + cursorX + "\nCursorY: " + cursorY +
-                "\ntargetAngle: " + targetAngle + "\nPlayer Angle: " + player.sprite.rotation +
+                "\ntargetAngle: " + targetAngle + "\nPlayer Angle: " + player.rotation +
                 "\nMousebuttons: " + game.input.mousePointer.buttons + "\n" + 
-                "Player X: " + player.sprite.x + "\n" +
-                "Player Y: " + player.sprite.y + "\n");
+                "Player X: " + player.x + "\n" +
+                "Player Y: " + player.y + "\n");
                 break;
 
             case 3:
@@ -459,8 +459,8 @@ function update() {
 
         // The camera target is where the camera should be, taking into account the cursor
         let cameraTarget = {};
-        cameraTarget.x = player.sprite.x - 900 + cursorX;
-        cameraTarget.y = player.sprite.y - 900 + cursorY;
+        cameraTarget.x = player.x - 900 + cursorX;
+        cameraTarget.y = player.y - 900 + cursorY;
 
         // move the actual camera focus to the target vector, very smoothly 
         cameraX -= (cameraX - cameraTarget.x) / 20;
