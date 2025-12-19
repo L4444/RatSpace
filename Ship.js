@@ -173,7 +173,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
         this.tX += v.x;
         this.tY += v.y;
     }
-    update() {
+    preUpdate(time,delta) {
         this.tintTick += 5;
 
         if (this.tintTick > 255) {

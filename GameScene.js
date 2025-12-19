@@ -178,7 +178,7 @@ class GameScene extends Phaser.Scene {
 
         this.pauseText = this.add.text(400, 400, "Paused - Press escape to unpause"); this.pauseText.setScrollFactor(0);
 
-        this.scoreText = this.add.text(750, 10, ""); this.scoreText.setScrollFactor(0);
+        this.scoreText = this.add.text(600, 10, ""); this.scoreText.setScrollFactor(0);
 
 
 
@@ -329,15 +329,11 @@ class GameScene extends Phaser.Scene {
             //update the asteroids
             this.asteroid.angle += 0.2;
 
-            this.#player.update();
+         
 
 
 
-            for (let i = 0; i < this.enemies.length; i++) {
-
-                this.enemies[i].update();
-
-            }
+         
 
         }
 
