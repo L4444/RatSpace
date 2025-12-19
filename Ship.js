@@ -224,7 +224,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
             // Play explosion sound effect.
             var r = Math.floor(Math.random() * 9);
-            console.log(r);
+            
             Ship.explosionSound[r].play();
 
             this.hp = 100;
@@ -263,7 +263,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
     }
     doAI() {
 
-        console.log(this);
+        
         if (this.x > 750) { this.spaceInvaderRight = false; }
         if (this.x < 150) { this.spaceInvaderRight = true; }
 

@@ -1,0 +1,422 @@
+class GameScene extends Phaser.Scene {
+
+    constructor() {
+        super('GameScene');
+
+    }
+
+
+
+    preload() {
+        this.load.image('player', 'ships/player-2.png');
+        this.load.image('enemy1', 'ships/empire-d.png');
+        this.load.image('enemy2', 'ships/empire-d.png');
+        this.load.image('enemy3', 'ships/empire-d.png');
+        this.load.image('enemy4', 'ships/empire-d.png');
+
+        this.load.image('back', 'backgrounds/Blue Nebula/Blue Nebula 1 - 1024x1024.png');
+        this.load.image('menuBack', 'backgrounds/Green Nebula/Green Nebula 7 - 1024x1024.png');
+        this.load.image('logo', 'Ratspace Logo.png');
+        this.load.image('asteroid', 'asteroids/Asteroid.png');
+
+
+        this.load.image('flare', 'particles/flare.png');
+
+        this.load.image('pew', 'pew.png');
+
+        var u;
+        for (var i = 0; i < 15; i++) {
+            u = (i + 1).toString().padStart(4, '0');
+
+            this.load.image('boom' + i, 'effects/explosion4/k2_' + u + '.png');
+        }
+
+        // load music
+        this.load.audio('menu', 'music/Menu.wav');
+        this.load.audio('battle', 'music/n-Dimensions (Main Theme).mp3');
+        this.load.audio('sneak', 'music/through space.ogg');
+        this.load.audio('boss', 'music/Power Trip 3.mp3');
+
+        // load shooting sounds
+        this.load.audio('shoot1', 'sounds/alienshoot1.wav');
+        this.load.audio('shoot2', 'sounds/alienshoot2.wav');
+
+        // load all the explosion sounds
+        for (let i = 0; i < 9; i++) {
+            this.load.audio('boom' + (i + 1), 'explosions/explosion0' + (i + 1) + '.wav');
+        }
+
+        // load hit sounds
+        this.load.audio('hitPlayerSound', 'sounds/hitPlayerSound.wav');
+        this.load.audio('hitEnemySound', 'sounds/Laser_01.wav');
+
+
+
+
+        console.log("Preloading done");
+
+        
+
+    }
+
+    resumeGame() {
+        this.gameState = state.Gameplay; this.game.scene.scenes[0].physics.resume(); this.game.sound.pauseAll(); this.battleMusic.resume();
+        this.menuBack.visible = false; this.pauseText.visible = false; this.pauseShade.visible = false; this.gameLogo.visible = false; this.helpText.visible = true;
+    }
+
+    pauseGame() {
+        this.gameState = state.Menu; this.game.scene.scenes[0].physics.pause(); this.game.sound.pauseAll(); this.pauseText.visible = true; this.pauseShade.visible = true;
+    }
+
+    create() {
+
+
+
+
+        this.backgrounds = [];
+        // Create the "parallax" backgrounds, tile them together in 3x3 grid to make them look seamless.
+        for (var i = 0; i < 9; i++) {
+            var x = i % 3;
+            var y = Math.floor(i / 3);
+
+            this.backgrounds[i] = this.add.tileSprite(x * 1024, y * 1024, 1024, 1024, 'back');
+
+            // Don't forget to add scroll factor back to make it parallax
+            this.backgrounds[i].setScrollFactor(0.5);
+
+        }
+
+
+        // Create an asteroid to help player orient themselves
+        this.asteroid = this.physics.add.sprite(1000, 1500, 'asteroid');
+        let r = 150;
+        this.asteroid.setCircle(r, 110, 100);
+
+
+
+        // Create music objects
+        this.menuMusic = this.sound.add('menu', { loop: true });
+
+        this.battleMusic = this.sound.add('battle', { loop: true });
+        this.battleMusic.volume = 0.1;
+
+        this.sneakMusic = this.sound.add('sneak', { loop: true });
+        this.sneakMusic.volume = 0.3;
+
+        this.bossMusic = this.sound.add('boss', { loop: true });
+        this.bossMusic.volume = 0.1;
+
+        var f = [];
+        for (var i = 0; i < 15; i++) {
+            f[i] = { key: 'boom' + i };
+        }
+        this.anims.create({ key: 'explode', frames: f, frameRate: 30, repeat: 0 });
+
+
+
+
+        this.player = new Ship(this, 'player', 1000, 1200, false);
+
+        Ship.playerShip = this.player;
+
+
+
+
+
+
+
+        // Prepare the explosion sounds.
+        Ship.explosionSound = [];
+        for (let i = 0; i < 9; i++) {
+            Ship.explosionSound[i] = this.sound.add('boom' + (i + 1));
+            Ship.explosionSound[i].volume = 0.5;
+
+        }
+
+        // collide with asteroid
+        this.physics.add.collider(this.player, this.asteroid, function (pShip, eShip, body1, body2) {
+            console.log("Player hit asteroid ");
+        });
+
+
+        this.enemy = [];
+        for (let i = 0; i < 4; i++) {
+
+            this.enemy[i] = new Ship(this, 'enemy' + (i + 1), 1000 + (i * 200), 1000, true);
+
+
+
+            // Collide with the player
+            this.physics.add.collider(this.player, this.enemy[i], function (pShip, eShip, body1, body2) {
+                pShip.hp -= 10; eShip.hp -= 10;
+                if (pShip.hp > 0) { pShip.hitSound.play(); }
+            });
+
+        }
+
+        // Collide with other enemies
+        for (let i = 0; i < this.enemy.length; i++) {
+            for (let j = i; j < this.enemy.length; j++) {
+                this.physics.add.collider(this.enemy[i], this.enemy[j], function (aShip, bShip, body1, body2) {
+                    //aShip.hp -= 5; bShip.hp -= 5; 
+                    console.log('one bounce');
+
+                });
+            }
+        }
+
+        // Add collision detection for Enemy bullets vs player
+        for (let i = 0; i < this.enemy.length; i++) {
+
+            for (let j = 0; j < this.enemy[i].bullet.length; j++) {
+                this.physics.add.overlap(this.player, this.enemy[i].bullet[j], function (hitShip, hitBullet, body1, body2) {
+                    console.log('Player hit');
+                    hitShip.tintTick = 0;
+                    hitShip.hp -= 20;
+                    //if(hitShip.hp > 0) {hitShip.hitSound.play();} /// This is a horrible sound
+                    hitBullet.x = -9999; hitBullet.y = -9999;
+                    hitShip.setVelocity(hitBullet.body.velocity.x, hitBullet.body.velocity.y);
+                    hitBullet.setVelocity(0, 0);
+                });
+            }
+
+        }
+
+        // Finally, add collision detection for Player bullets vs enemies
+        for (let i = 0; i < this.enemy.length; i++) {
+
+            for (let j = 0; j < this.player.bullet.length; j++) {
+                this.physics.add.overlap(this.enemy[i], this.player.bullet[j], function (hitShip, hitBullet, body1, body2) {
+                    console.log('Enemy hit');
+                    hitShip.tintTick = 0;
+                    hitShip.hp -= 50;
+                    if (hitShip.hp > 0) { hitShip.hitSound.play(); }
+                    hitBullet.x = -9999; hitBullet.y = -9999;
+                    hitShip.setVelocity(hitBullet.body.velocity.x / 10, hitBullet.body.velocity.y / 10);
+                    hitBullet.setVelocity(0, 0);
+                });
+            }
+        }
+
+
+        // The pause menu
+        this.menuBack = this.add.tileSprite(500, 500, 1024, 1024, 'menuBack');
+        this.pauseShade = this.add.rectangle(0, 0, 2000, 2000, 0x336633, .25);
+        this.pauseShade.visible = false;
+
+        this.gameLogo = this.add.sprite(450, 350, 'logo');
+
+
+        this.keys = this.input.keyboard.addKeys('W,S,A,D,F,E,Q,F,G,H,UP,DOWN,SPACE,F1');
+        this.infoText = this.add.text(10, 30, ""); this.infoText.setScrollFactor(0);
+        this.helpText = this.add.text(10, 10, "Press F1 to cycle through help menus"); this.helpText.setScrollFactor(0);
+        this.helpText.visible = false; // Don't show the help text in the menu.
+
+
+        this.pauseText = this.add.text(400, 400, "Paused - Press escape to unpause"); this.pauseText.setScrollFactor(0);
+
+        this.scoreText = this.add.text(750, 10, ""); this.scoreText.setScrollFactor(0);
+
+
+
+
+
+
+        // Toggle the help for controls and debug. Also control music
+        this.input.keyboard.on('keyup-F1', function (event) {
+
+            if (this.infoMode < 3) {
+                this.infoMode++;
+            }
+            else {
+                this.infoMode = 1;
+            }
+        })
+
+        this.input.keyboard.on('keyup-ONE', function (event) { if (!this.menuMusic.isPlaying) { this.game.sound.stopAll(); this.menuMusic.play(); } })
+        this.input.keyboard.on('keyup-TWO', function (event) { if (!this.battleMusic.isPlaying) { this.game.sound.stopAll(); this.battleMusic.play(); } })
+        this.input.keyboard.on('keyup-THREE', function (event) { if (!this.sneakMusic.isPlaying) { this.game.sound.stopAll(); this.sneakMusic.play(); } })
+        this.input.keyboard.on('keyup-FOUR', function (event) { if (!this.bossMusic.isPlaying) { this.game.sound.stopAll(); this.bossMusic.play(); } })
+        this.input.keyboard.on('keyup-ESC', function (event) {
+
+            if (this.gameState == state.Gameplay) {
+                this.pauseGame(); return;
+            }
+
+
+            if (this.gameState == state.Menu) {
+
+                this.resumeGame(); return;
+            }
+
+        });
+        this.input.keyboard.on('keyup-LEFT', function (event) {
+
+            Ship.BIG_THRUST -= 20;
+
+        });
+
+        this.input.keyboard.on('keyup-RIGHT', function (event) {
+
+            Ship.BIG_THRUST += 20;
+
+        });
+        this.input.keyboard.on('keyup-UP', function (event) {
+            Ship.MAX_SPEED += 20;
+
+
+
+        });
+        this.input.keyboard.on('keyup-DOWN', function (event) {
+            Ship.MAX_SPEED -= 20;
+
+
+        });
+        this.input.keyboard.on('keyup-F', function (event) {
+
+
+
+        });
+        this.input.keyboard.on('keyup-G', function (event) {
+
+
+
+        });
+
+
+
+        // Start game
+        this.gameState = state.Menu;
+
+        // Start in game
+        this.resumeGame();
+
+
+
+        Ship.playerShip.score = 0;
+
+     
+        this.cameraX = 0;
+        this.cameraY = 0;
+
+
+        console.log('Objects created');
+
+        
+    }
+
+
+
+    update() {
+        
+        // Cheesy scrolling background
+        this.menuBack.tilePositionY -= 1;
+
+
+
+
+
+        this.scoreText.text = "Score: " + Ship.playerShip.score;
+
+
+        if (this.gameState == state.Gameplay) {
+
+            // Basic controls, BIG thrust is the engine that player directly controls
+            if (this.keys.D.isDown) { this.player.right(); }
+            if (this.keys.A.isDown) { this.player.left(); }
+
+            if (this.keys.W.isDown) { this.player.forward(); }
+            if (this.keys.S.isDown) { this.player.back(); }
+
+            if (game.input.mousePointer.buttons == 1) { this.player.shoot(); }
+
+            let cursorX = game.input.mousePointer.x;
+            let cursorY = game.input.mousePointer.y;
+
+
+
+
+            /// Make the player face the mouse pointer.
+            /// Chat gpt helped me with this, 
+            // Get the mouse position and convert it to worldCoordinates
+            let pointer = this.input.activePointer;
+            let worldCursor = pointer.positionToCamera(this.cameras.main);
+
+            let targetAngle = Phaser.Math.Angle.Between(this.player.x, this.player.y, worldCursor.x, worldCursor.y);
+
+            // Turn to face the targetAngle
+            let turnSpeed = 0.02;
+            this.player.rotation = Phaser.Math.Angle.RotateTo(this.player.rotation, targetAngle, turnSpeed);
+
+
+
+            // Present the various types of info in text box 
+            switch (this.infoMode) {
+                case 1:
+
+                    this.infoText.setText("-----------Controls-----------\n"
+                        + "W,S,A,D for movement\n"
+                        + " Left click for shoot\n"
+                        + "1 for menu music \n2 for battle music \n3 for stealth music \n4 for boss music");
+
+                    break;
+                case 2:
+                    this.infoText.setText("-------------DEBUG-------------\n"
+                        + "(LEFT / RIGHT) Big thrust is " + Ship.BIG_THRUST + "\n"
+                        + "(UP / DOWN) Max Speed is " + Ship.MAX_SPEED + "\n"
+                        + "VelX = " + this.player.body.velocity.x + "\nVelY = " + this.player.body.velocity.y +
+                        "\ntX: " + this.player.tX + "\ntY: " + this.player.tY +
+                        "\nCursorX: " + cursorX + "\nCursorY: " + cursorY +
+                        "\ntargetAngle: " + targetAngle + "\nPlayer Angle: " + this.player.rotation +
+                        "\nMousebuttons: " + game.input.mousePointer.buttons + "\n" +
+                        "Player X: " + this.player.x + "\n" +
+                        "Player Y: " + this.player.y + "\n");
+                    break;
+
+                case 3:
+                    this.infoText.setText("-----------PARTICLES-----------");
+                    break;
+
+
+            }
+
+
+
+
+
+
+
+            //update the asteroids
+            this.asteroid.angle += 0.2;
+
+            this.player.update();
+
+
+
+            for (let i = 0; i < this.enemy.length; i++) {
+
+                this.enemy[i].update();
+
+            }
+
+            
+            // The camera target is where the camera should be, taking into account the cursor
+            let cameraTarget = {};
+            cameraTarget.x = this.player.x - 900 + cursorX;
+            cameraTarget.y = this.player.y - 900 + cursorY;
+
+            // move the actual camera focus to the target vector, very smoothly 
+            this.cameraX -= (this.cameraX - cameraTarget.x) / 20;
+            this.cameraY -= (this.cameraY - cameraTarget.y) / 20;
+
+
+            this.cameras.main.setScroll(this.cameraX, this.cameraY);
+
+
+
+
+
+        }
+
+    }
+}
