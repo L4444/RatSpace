@@ -70,6 +70,7 @@ class GameScene extends Phaser.Scene {
 
     create() {
 
+        
         // Disable mouse click context menu
         this.game.canvas.addEventListener("contextmenu", e => {
             e.preventDefault();
@@ -224,23 +225,23 @@ class GameScene extends Phaser.Scene {
 
 
 
-
+       
 
         // Toggle the help for controls and debug. Also control music
         this.input.keyboard.on('keyup-F1', function (event) {
-
-            if (this.infoMode < 3) {
-                this.infoMode++;
+            if (this.scene.infoMode < 3) {
+                this.scene.infoMode++;
             }
             else {
-                this.infoMode = 1;
+                this.scene.infoMode = 1;
             }
+                
         })
 
-        this.input.keyboard.on('keyup-ONE', function (event) { if (!this.menuMusic.isPlaying) { this.game.sound.stopAll(); this.menuMusic.play(); } })
-        this.input.keyboard.on('keyup-TWO', function (event) { if (!this.battleMusic.isPlaying) { this.game.sound.stopAll(); this.battleMusic.play(); } })
-        this.input.keyboard.on('keyup-THREE', function (event) { if (!this.sneakMusic.isPlaying) { this.game.sound.stopAll(); this.sneakMusic.play(); } })
-        this.input.keyboard.on('keyup-FOUR', function (event) { if (!this.bossMusic.isPlaying) { this.game.sound.stopAll(); this.bossMusic.play(); } })
+        this.input.keyboard.on('keyup-ONE', function (event) { if (!this.scene.menuMusic.isPlaying) { this.game.sound.stopAll(); this.scene.menuMusic.play(); } })
+        this.input.keyboard.on('keyup-TWO', function (event) { if (!this.scene.battleMusic.isPlaying) { this.game.sound.stopAll(); this.scene.battleMusic.play(); } })
+        this.input.keyboard.on('keyup-THREE', function (event) { if (!this.scene.sneakMusic.isPlaying) { this.game.sound.stopAll(); this.scene.sneakMusic.play(); } })
+        this.input.keyboard.on('keyup-FOUR', function (event) { if (!this.scene.bossMusic.isPlaying) { this.game.sound.stopAll(); this.scene.bossMusic.play(); } })
         this.input.keyboard.on('keyup-ESC', function (event) {
 
             if (this.gameState == state.Gameplay) {
@@ -302,6 +303,8 @@ class GameScene extends Phaser.Scene {
      
         this.cameraX = 0;
         this.cameraY = 0;
+
+        this.infoMode = 1;
 
 
         console.log('Objects created');
@@ -406,8 +409,8 @@ class GameScene extends Phaser.Scene {
             
             // The camera target is where the camera should be, taking into account the cursor
             let cameraTarget = {};
-            cameraTarget.x = this.player.x - 900 + cursorX;
-            cameraTarget.y = this.player.y - 900 + cursorY;
+            cameraTarget.x = this.player.x - (this.scale.width  ) + cursorX;
+            cameraTarget.y = this.player.y - (this.scale.height ) + cursorY;
 
             // move the actual camera focus to the target vector, very smoothly 
             this.cameraX -= (this.cameraX - cameraTarget.x) / 20;

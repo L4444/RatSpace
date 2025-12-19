@@ -1,14 +1,20 @@
+var gameScreen = {
+    width: 800,
+    height: 800
+};
+
+
 var config = {
     type: Phaser.AUTO,
-    width: 900,
-    height: 900,
+    width: gameScreen.width,
+    height: gameScreen.height,
     physics: {
         default: 'arcade',
         arcade: {
             x: 0,
             y: 0,
-            width: 900,
-            height: 900,
+            width: gameScreen.width,
+            height: gameScreen.height,
             debug: true // Show the wireframes and velocity 
         }
     },
