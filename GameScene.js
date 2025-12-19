@@ -24,6 +24,7 @@ class GameScene extends Phaser.Scene {
         this.load.image('flare', 'particles/flare.png');
 
         this.load.image('pew', 'pew.png');
+        this.load.image('red', 'red.png')
 
         var u;
         for (var i = 0; i < 15; i++) {
@@ -84,7 +85,7 @@ class GameScene extends Phaser.Scene {
 
         
         this.backgrounds = [];
-        this.asteroids = []
+        this.statics = []
         // Create the "parallax" backgrounds, tile them together in 3x3 grid to make them look seamless.
         for (var i = 0; i < 9; i++) {
             var x = i % 3;
@@ -97,7 +98,7 @@ class GameScene extends Phaser.Scene {
 
 
             // Create an asteroid to help player orient themselves
-            this.asteroids[i] = new Asteroid(this, 'asteroid', x * 800, y * 800, i * 20);
+            this.statics.push( new Asteroid(this, 'asteroid', x * 800, y * 800, i * 20));
             
 
           
@@ -105,10 +106,22 @@ class GameScene extends Phaser.Scene {
         }
 
     
+        let boundSize = 1500;
+        let wallThickness = 50
+        // Create the "walls", for out of bounds
+        this.statics.push(new Wall(this, 'red', 1000, 1000-boundSize, boundSize * 2, wallThickness)); ///Top
+        this.statics.push(new Wall(this, 'red', 1000+boundSize,1000, wallThickness, boundSize * 2 )); // Right
+        this.statics.push(new Wall(this, 'red', 1000, 1000+boundSize, boundSize * 2, wallThickness)); // Bottom
+        this.statics.push(new Wall(this, 'red', 1000-boundSize,1000, wallThickness, boundSize * 2 )); // Left
+        
+        
+        
+        
+        
 
         
          // Create the player ship
-        this.#player = new Ship(this, 'player', 1000, 1200, false);
+        this.#player = new Ship(this, 'player', 1000, 1000, false);
         this.playerInput = new PlayerInput(this,this.#player);
 
         Ship.playerShip = this.#player;
@@ -160,11 +173,11 @@ class GameScene extends Phaser.Scene {
         this.enemies = [];
         for (let i = 0; i < 4; i++) {
 
-            this.enemies[i] = new Ship(this, 'enemy' + (i + 1), 1000 + (i * 200), 1000, true);
+            this.enemies[i] = new Ship(this, 'enemy' + (i + 1), 1000 + (i * 200), 800, true);
 
         }
 
-        this.collisionManager = new CollisionMananger(this, this.#player, this.enemies,this.asteroids);
+        this.collisionManager = new CollisionMananger(this, this.#player, this.enemies,this.statics);
 
 
 
