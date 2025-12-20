@@ -82,19 +82,17 @@ class GameScene extends Phaser.Scene {
 
       
 
-
+        this.gameBackground = new GameBackground(this, 'back',1000,1000,1024 * 3,1024 * 3);
         
-        this.backgrounds = [];
+    
         this.statics = []
         // Create the "parallax" backgrounds, tile them together in 3x3 grid to make them look seamless.
         for (var i = 0; i < 9; i++) {
             var x = i % 3;
             var y = Math.floor(i / 3);
 
-            this.backgrounds[i] = this.add.tileSprite(x * 1024, y * 1024, 1024, 1024, 'back');
+        
 
-            // Don't forget to add scroll factor back to make it parallax
-            this.backgrounds[i].setScrollFactor(0.5);
 
 
             // Create an asteroid to help player orient themselves
@@ -105,9 +103,11 @@ class GameScene extends Phaser.Scene {
 
         }
 
+        
+
     
         let boundSize = 1200;
-        let wallThickness = 50
+        let wallThickness = 200
         // Create the "walls", for out of bounds
         this.statics.push(new Wall(this, 'red', 1000, 1000-boundSize, boundSize * 2, wallThickness)); ///Top
         this.statics.push(new Wall(this, 'red', 1000+boundSize,1000, wallThickness, boundSize * 2 )); // Right

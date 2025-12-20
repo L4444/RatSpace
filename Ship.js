@@ -202,13 +202,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
         if (this.isEnemy) { this.doAI(); }
 
-        // line up the hp bar
-        this.hpBarBack.x = this.x;
-        this.hpBarFront.x = this.x + ((this.hp / 100) * this.displayWidth / 2) - this.displayWidth / 2;
-        this.hpBarBack.y = this.hpBarFront.y = this.y - 50;
-        this.hpBarFront.displayWidth = (this.hp / 100) * this.displayWidth;
-
-        // Check hp
+         // Check hp 
         if (this.hp <= 0) {
             this.explosion.x = this.x;
             this.explosion.y = this.y;
@@ -216,7 +210,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
             if (this.isEnemy) {
                 this.x = 0;
-                this.y = -1000;
+                this.y = 0;
                 Ship.playerShip.score += 100;
 
 
@@ -229,6 +223,14 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
             this.hp = 100;
         }
+
+        // line up the hp bar, Do this AFTER checking hp so that when we move the hp bar doesn't look glitchy
+        this.hpBarBack.x = this.x;
+        this.hpBarFront.x = this.x + ((this.hp / 100) * this.displayWidth / 2) - this.displayWidth / 2;
+        this.hpBarBack.y = this.hpBarFront.y = this.y - 50;
+        this.hpBarFront.displayWidth = (this.hp / 100) * this.displayWidth;
+
+       
 
         // If we aren't dead, regen HP slowly
         if (this.hp < 100) { this.hp += 0.1; }

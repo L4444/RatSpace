@@ -11,11 +11,7 @@ class PlayerInput extends Phaser.GameObjects.GameObject
         super(scene);
         scene.add.existing(this);
 
-        
-        
         this.#player = player;
-
-
     }
 
     get cameraPos()
