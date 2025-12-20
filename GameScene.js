@@ -106,7 +106,7 @@ class GameScene extends Phaser.Scene {
         }
 
     
-        let boundSize = 1500;
+        let boundSize = 1200;
         let wallThickness = 50
         // Create the "walls", for out of bounds
         this.statics.push(new Wall(this, 'red', 1000, 1000-boundSize, boundSize * 2, wallThickness)); ///Top
