@@ -232,12 +232,12 @@ class GameScene extends Phaser.Scene {
 
         this.input.keyboard.on('keyup-Q', function (event) {
 
-            Ship.TURN_SPEED += 1;
+            Ship.TURN_SPEED_FACTOR += 1;
             
         });
 
         this.input.keyboard.on('keyup-E', function (event) {
-            Ship.TURN_SPEED -= 1;
+            Ship.TURN_SPEED_FACTOR -= 1;
         });
 
         this.input.keyboard.on('keyup-F', function (event) {

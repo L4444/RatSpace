@@ -58,7 +58,7 @@ class PlayerInput extends Phaser.GameObjects.GameObject
             // Turn to face the targetAngle
             // TODO: Decouple this from player input.
             // Calculating should be done in playerinput but turning should be done in ship class.
-            this.#player.rotation = Phaser.Math.Angle.RotateTo(this.#player.rotation, this.#targetAngle, Ship.TURN_SPEED / 1000);
+            this.#player.rotation = Phaser.Math.Angle.RotateTo(this.#player.rotation, this.#targetAngle, Ship.TURN_SPEED_FACTOR / 1000);
 
             // The camera target is where the camera should be, taking into account the cursor
             let cameraTarget = {};
