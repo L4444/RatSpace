@@ -1,6 +1,12 @@
 class GameScene extends Phaser.Scene {
 
     #player = null;
+
+    get player()
+    {
+        return this.#player;
+    }
+
     constructor() {
         super('GameScene');
 
@@ -86,21 +92,13 @@ class GameScene extends Phaser.Scene {
         
     
         this.statics = []
-        // Create the "parallax" backgrounds, tile them together in 3x3 grid to make them look seamless.
         for (var i = 0; i < 9; i++) {
             var x = i % 3;
             var y = Math.floor(i / 3);
 
-        
-
-
-
             // Create an asteroid to help player orient themselves
             this.statics.push( new Asteroid(this, 'asteroid', x * 800, y * 800, i * 20));
-            
-
-          
-
+        
         }
 
         
@@ -150,16 +148,6 @@ class GameScene extends Phaser.Scene {
         this.anims.create({ key: 'explode', frames: f, frameRate: 30, repeat: 0 });
 
 
-
-
-       
-
-
-
-
-
-
-
         // Prepare the explosion sounds.
         Ship.explosionSound = [];
         for (let i = 0; i < 9; i++) {
@@ -181,9 +169,6 @@ class GameScene extends Phaser.Scene {
 
 
 
-        
-
-
         // The pause menu
         this.menuBack = this.add.tileSprite(500, 500, 1024, 1024, 'menuBack');
         this.pauseShade = this.add.rectangle(0, 0, 2000, 2000, 0x336633, .25);
@@ -193,30 +178,26 @@ class GameScene extends Phaser.Scene {
 
 
         this.keys = this.input.keyboard.addKeys('W,S,A,D,F,E,Q,F,G,H,UP,DOWN,SPACE,F1');
-        this.infoText = this.add.text(10, 30, ""); this.infoText.setScrollFactor(0);
+
+
+
+        this.debugText = new DebugText(this, 10,30);
         this.helpText = this.add.text(10, 10, "Press F1 to cycle through help menus"); this.helpText.setScrollFactor(0);
-        this.helpText.visible = false; // Don't show the help text in the menu.
+        this.helpText.visible = false; // Don't show the help text in the "Main Menu"
 
 
         this.pauseText = this.add.text(400, 400, "Paused - Press escape to unpause"); this.pauseText.setScrollFactor(0);
 
         this.scoreText = this.add.text(600, 10, ""); this.scoreText.setScrollFactor(0);
 
+     
 
-
-
-       
-
-        // Toggle the help for controls and debug. Also control music
+        // Toggle the help text that shows how to control and has some debug info
         this.input.keyboard.on('keyup-F1', function (event) {
-            if (this.scene.infoMode < 3) {
-                this.scene.infoMode++;
-            }
-            else {
-                this.scene.infoMode = 1;
-            }
+            this.scene.debugText.switchInfoType();
+             
                 
-        })
+        });
 
         this.input.keyboard.on('keyup-ONE', function (event) { if (!this.scene.menuMusic.isPlaying) { this.game.sound.stopAll(); this.scene.menuMusic.play(); } })
         this.input.keyboard.on('keyup-TWO', function (event) { if (!this.scene.battleMusic.isPlaying) { this.game.sound.stopAll(); this.scene.battleMusic.play(); } })
@@ -236,27 +217,29 @@ class GameScene extends Phaser.Scene {
 
         });
         this.input.keyboard.on('keyup-LEFT', function (event) {
-
             Ship.BIG_THRUST -= 20;
-
         });
 
         this.input.keyboard.on('keyup-RIGHT', function (event) {
-
             Ship.BIG_THRUST += 20;
-
         });
         this.input.keyboard.on('keyup-UP', function (event) {
             Ship.MAX_SPEED += 20;
-
-
-
         });
         this.input.keyboard.on('keyup-DOWN', function (event) {
             Ship.MAX_SPEED -= 20;
-
-
         });
+
+        this.input.keyboard.on('keyup-Q', function (event) {
+
+            Ship.TURN_SPEED += 1;
+            
+        });
+
+        this.input.keyboard.on('keyup-E', function (event) {
+            Ship.TURN_SPEED -= 1;
+        });
+
         this.input.keyboard.on('keyup-F', function (event) {
 
 
@@ -300,60 +283,13 @@ class GameScene extends Phaser.Scene {
         this.menuBack.tilePositionY -= 1;
 
 
-
-
-
         this.scoreText.text = "Score: " + Ship.playerShip.score;
 
 
         if (this.gameState == state.Gameplay) {
             // Center the camera on the player, let PlayerInput deal with smoothness
             this.cameras.main.setScroll(this.playerInput.cameraPos.x, this.playerInput.cameraPos.y);
-
-
-
-            // Present the various types of info in text box 
-            switch (this.infoMode) {
-                case 1:
-
-                    this.infoText.setText("-----------Controls-----------\n"
-                        + "W,S,A,D for movement\n"
-                        + " Left click for shoot\n"
-                        + "1 for menu music \n2 for battle music \n3 for stealth music \n4 for boss music");
-
-                    break;
-                case 2:
-                    this.infoText.setText("-------------DEBUG-------------\n"
-                        + "(LEFT / RIGHT) Big thrust is " + Ship.BIG_THRUST + "\n"
-                        + "(UP / DOWN) Max Speed is " + Ship.MAX_SPEED + "\n"
-                        + "VelX = " + this.#player.body.velocity.x + "\nVelY = " + this.#player.body.velocity.y +
-                        "\ntX: " + this.#player.tX + "\ntY: " + this.#player.tY +
-                        "\nCursorX: " + this.playerInput.cursorPos.x + "\nCursorY: " + this.playerInput.cursorPos.y +
-                        "\ntargetAngle: " + this.playerInput.targetAngle + "\nPlayer Angle: " + this.#player.rotation +
-                        "\nMousebuttons: " + game.input.mousePointer.buttons + "\n" +
-                        "Player X: " + this.#player.x + "\n" +
-                        "Player Y: " + this.#player.y + "\n");
-                    break;
-
-                case 3:
-                    this.infoText.setText("-----------PARTICLES-----------");
-                    break;
-
-
-            }
-
-
-
-
-
-
-
-           
-         
-
-
-
-         
+ 
 
         }
 

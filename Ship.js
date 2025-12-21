@@ -1,6 +1,6 @@
 class Ship extends Phaser.Physics.Arcade.Sprite {
     static BIG_THRUST = 200;
-    static LITTLE_THRUST = 5.0;
+    static TURN_SPEED = 20;
     static MAX_SPEED = 200;
     static playerShip;
 
