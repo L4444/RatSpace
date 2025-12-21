@@ -128,7 +128,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
     shoot() {
 
 
-        if (this.clock > this.lastTick + 100) {
+        if (this.clock > this.lastTick + 20) {
             this.shootSound.play();
 
 
@@ -244,8 +244,9 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
         // Activate the particle effect if the ship "Boosts"
         if (this.tX > 1) {
             this.thruster.start(); 
-            v.scale(Ship.BIG_THRUST * 2);   
+            v.scale(Ship.BIG_THRUST * 4);   
             this.body.setMaxSpeed(Ship.MAX_SPEED * 10);
+            
         }
         else {
             this.thruster.stop(); 
