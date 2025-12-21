@@ -88,9 +88,9 @@ class GameScene extends Phaser.Scene {
         
     
         this.statics = []
-        for (var i = 0; i < 9; i++) {
-            var x = i % 3;
-            var y = Math.floor(i / 3);
+        for (var i = 0; i < 16; i++) {
+            var x = i % 4;
+            var y = Math.floor(i / 4);
 
             // Create an asteroid to help player orient themselves
             this.statics.push( new Asteroid(this, 'asteroid', x * 800, y * 800, i * 20));
@@ -100,7 +100,7 @@ class GameScene extends Phaser.Scene {
         
 
     
-        let boundSize = 1200;
+        let boundSize = 2000;
         let wallThickness = 200
         // Create the "walls", for out of bounds
         this.statics.push(new Wall(this, 'red', 1000, 1000-boundSize, boundSize * 2, wallThickness)); ///Top

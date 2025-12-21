@@ -21,12 +21,14 @@ class PlayerInput extends Phaser.GameObjects.GameObject
     preUpdate(time, delta)
     {
         
-        // Basic controls, BIG thrust is the engine that player directly controls
+            // Basic controls
             if (this.scene.keys.D.isDown) { this.player.right(); }
             if (this.scene.keys.A.isDown) { this.player.left(); }
 
             if (this.scene.keys.W.isDown) { this.player.forward(); }
             if (this.scene.keys.S.isDown) { this.player.back(); }
+
+            if (this.scene.keys.SPACE.isDown) { this.player.boost(); }
 
             if (game.input.mousePointer.buttons == 1) { this.player.shoot(); }
 
@@ -43,11 +45,13 @@ class PlayerInput extends Phaser.GameObjects.GameObject
             let worldCursor = pointer.positionToCamera(this.scene.cameras.main);
 
             this.targetAngle = Phaser.Math.Angle.Between(this.player.x, this.player.y, worldCursor.x, worldCursor.y);
+            
 
             // Turn to face the targetAngle
             // TODO: Decouple this from player input.
             // Calculating should be done in playerinput but turning should be done in ship class.
             this.player.rotation = Phaser.Math.Angle.RotateTo(this.player.rotation, this.targetAngle, Ship.TURN_SPEED_FACTOR / 1000);
+            
 
             // The camera target is where the camera should be, taking into account the cursor
             let cameraTarget = {};

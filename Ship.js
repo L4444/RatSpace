@@ -18,9 +18,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
         this.flame = scene.add.particles('flare');
 
-        // Manually add ship to scene and physics (contructor doesn't do this for us)
-        scene.add.existing(this);
-        scene.physics.add.existing(this); 
+    
 
         // The bullet sprites (Note that I intialise this before the ship 
         // so that the bullets spawn obscured by the ship sprite)
@@ -67,11 +65,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
         
 
-        // TODO: Adjust this to account for different image sizes
-        this.body.setCircle(w / 4, w / 4, h / 4);
-
-
-        this.body.setBounce(1, 1); // Ships should bounce enough off each other to prevent "rubbing"
+     
 
 
 
@@ -107,6 +101,15 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
         this.shootSound.volume = 0.3;
 
+        // Manually add ship to scene and physics (contructor doesn't do this for us)
+        // Put it all the way down here so the ship renders over the bullets
+        scene.add.existing(this);
+        scene.physics.add.existing(this); 
+
+        // TODO: Adjust this to account for different image sizes
+        this.body.setCircle(w / 4, w / 4, h / 4);
+        this.body.setBounce(1, 1); // Ships should bounce enough off each other to prevent "rubbing"
+
         // set hp
         this.hp = 100;
         this.hpBarBack = scene.add.rectangle(0, 0, this.displayWidth, 10, 0x000000, 1);
@@ -117,6 +120,8 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
 
         this.tintTick = 255;
+
+            
 
 
     }
@@ -152,11 +157,13 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
         this.tY += -1;
         
+        
     }
     right() {
      
 
         this.tY += 1;
+        
         
     }
     forward() {
@@ -171,6 +178,11 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
         
         this.tX += -1;
     }
+
+    boost()
+    {
+        this.tX = 2;
+    }
     preUpdate(time,delta) {
         this.tintTick += 5;
 
@@ -180,22 +192,12 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
         this.tint = '0xFF' + this.tintTick.toString(16) + 'FF';
 
-        // Testers can alter the ship's max speed while game is running
-        this.body.setMaxSpeed(Ship.MAX_SPEED);
+      
 
        
         
 
-        // TODO: clean this up
-        // If the any thruster is active (e.g. player presses any keys) activate the particle effected
-        if (this.tX > 0) {
-            this.thruster.start(); 
-            
-        }
-        else {
-            this.thruster.stop(); 
-        }
-
+        
 
 
         if (this.isEnemy) { this.doAI(); }
@@ -234,12 +236,24 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
         if (this.hp < 100) { this.hp += 0.1; }
 
 
-
         // Convert the key presses into an actual angle we can use to move the ship.
         let v = new Phaser.Math.Vector2(this.tX, this.tY);
-        v.normalize();
+         v.normalize();
         v.rotate(Phaser.Math.DegToRad(this.angle));
-        v.scale(Ship.BIG_THRUST);
+
+        // Activate the particle effect if the ship "Boosts"
+        if (this.tX > 1) {
+            this.thruster.start(); 
+            v.scale(Ship.BIG_THRUST * 2);   
+            this.body.setMaxSpeed(Ship.MAX_SPEED * 10);
+        }
+        else {
+            this.thruster.stop(); 
+             v.scale(Ship.BIG_THRUST);
+             this.body.setMaxSpeed(Ship.MAX_SPEED);
+             
+        }
+
         this.setAcceleration(v.x, v.y); // Then Activate the thrusters!
 
         // Tick the clock (useful for limiting bullet firing)

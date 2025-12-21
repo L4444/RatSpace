@@ -37,6 +37,7 @@ class DebugText extends Phaser.GameObjects.Text {
                         "-----------Controls-----------": "-",
                         "W,S,A,D for movement": "-",
                         "Left click for shoot" : "-",
+                        "Spacebar for Boost" : "-",
                         "1 for menu music" : "-",
                         "2 for battle music" : "-",
                         "3 for stealth music": "-",
