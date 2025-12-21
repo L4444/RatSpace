@@ -13,6 +13,11 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
         super(scene, x,y,spriteName);
 
+        // Particle thrust effect, put it here so it's z order puts it behind the actual ship sprite
+        this.particleContainer = scene.add.container(0, 0);
+
+        this.flame = scene.add.particles('flare');
+
         // Manually add ship to scene and physics (contructor doesn't do this for us)
         scene.add.existing(this);
         scene.physics.add.existing(this); 
@@ -36,23 +41,20 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
         this.lastTick = -500;
 
 
-        // Particle thrust effect
-        this.particleContainer = scene.add.container(0, 0);
-
-        this.flame = scene.add.particles('flare');
+     
 
         this.thruster = this.flame.createEmitter({
             x: 0,
             y: 0,
-            //color: [0xfacc22, 0xf89800, 0xf83600, 0x9f0404],
+            
             color: [0xff0000],
             colorEase: 'quad.out',
             lifespan: 200,
-            //angle: { min: -100, max: -80 },
+            
             angle: -90,
-            scale: { start: 0.20, end: 0.10, ease: 'sine.out' },
+            scale: { start: 0.30, end: 0.10, ease: 'sine.out' },
             alpha: { start: 1, end: 0},
-            //accelerationY: 800,
+            
             speed: 300,
             advance: 2000,
             blendMode: 'ADD'
@@ -146,32 +148,28 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
     }
     left() {
-        let v = new Phaser.Math.Vector2(0, -Ship.BIG_THRUST);
-        v.rotate(Phaser.Math.DegToRad(this.angle));
+       
 
-        this.tX += v.x;
-        this.tY += v.y;
+        this.tY += -1;
+        
     }
     right() {
-        let v = new Phaser.Math.Vector2(0, Ship.BIG_THRUST);
-        v.rotate(Phaser.Math.DegToRad(this.angle));
+     
 
-        this.tX += v.x;
-        this.tY += v.y;
+        this.tY += 1;
+        
     }
     forward() {
-        let v = new Phaser.Math.Vector2(Ship.BIG_THRUST, 0);
-        v.rotate(Phaser.Math.DegToRad(this.angle));
 
-        this.tX += v.x;
-        this.tY += v.y;
+
+        
+        this.tX += 1;
     }
     back() {
-        let v = new Phaser.Math.Vector2(-Ship.BIG_THRUST, 0);
-        v.rotate(Phaser.Math.DegToRad(this.angle));
 
-        this.tX += v.x;
-        this.tY += v.y;
+
+        
+        this.tX += -1;
     }
     preUpdate(time,delta) {
         this.tintTick += 5;
@@ -190,7 +188,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
         // TODO: clean this up
         // If the any thruster is active (e.g. player presses any keys) activate the particle effected
-        if (this.tY != 0) {
+        if (this.tX > 0) {
             this.thruster.start(); 
             
         }
@@ -236,8 +234,13 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
         if (this.hp < 100) { this.hp += 0.1; }
 
 
-        // Activate big thruster!
-        this.setAcceleration(this.tX, this.tY);
+
+        // Convert the key presses into an actual angle we can use to move the ship.
+        let v = new Phaser.Math.Vector2(this.tX, this.tY);
+        v.normalize();
+        v.rotate(Phaser.Math.DegToRad(this.angle));
+        v.scale(Ship.BIG_THRUST);
+        this.setAcceleration(v.x, v.y); // Then Activate the thrusters!
 
         // Tick the clock (useful for limiting bullet firing)
         this.clock++;
