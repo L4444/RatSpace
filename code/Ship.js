@@ -52,7 +52,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
             lifespan: 200,
             
             angle: -90,
-            scale: { start: 0.30, end: 0.10, ease: 'sine.out' },
+            scale: { start: 0.20, end: 0.10, ease: 'sine.out' },
             alpha: { start: 1, end: 0},
             
             speed: 300,
@@ -61,9 +61,6 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
         });
         this.particleContainer.add(this.flame);
 
-        // -- Get the measurements of the ship spread and create a hit circle 
-        let w = this.displayWidth;
-        let h = this.displayHeight;
 
         
 
@@ -109,6 +106,9 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.existing(this); 
 
         // TODO: Adjust this to account for different image sizes
+        // -- Get the measurements of the ship spread and create a hit circle 
+        let w = this.displayWidth;
+        let h = this.displayHeight;
         this.body.setCircle(w / 4, w / 4, h / 4);
         this.body.setBounce(1, 1); // Ships should bounce enough off each other to prevent "rubbing"
 
@@ -247,7 +247,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
         if (this.tX > 1) {
             this.thruster.start(); 
             v.scale(Ship.BIG_THRUST * 4);   
-            this.body.setMaxSpeed(Ship.MAX_SPEED * 10);
+            this.body.setMaxSpeed(Ship.MAX_SPEED * 4);
             
         }
         else {
@@ -263,7 +263,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
         this.clock++;
 
          // move thruster with ship
-        let thr = new Phaser.Math.Vector2(-62,0);
+        let thr = new Phaser.Math.Vector2(-31,0);
         thr.rotate(this.rotation);
 
         /// move the container that the emitter and particles are in with the ship
