@@ -53,13 +53,13 @@ class DebugText extends Phaser.GameObjects.Text {
                         "Player Y" : this.scene.player.y,
                         "Player Thruster X" : this.scene.player.tX,
                         "Player Thruster Y" : this.scene.player.tY,
-                        "Target Angle" : this.scene.playerInput.targetAngle,
+                        "Target Angle" : this.scene.player.controller.targetAngle,
                         "Player Angle" : this.scene.player.rotation,
                         "Player Velocity X" : this.scene.player.body.velocity.x,
                         "Player Velocity Y" : this.scene.player.body.velocity.y,
                         "Mouse Buttons" : this.scene.game.input.mousePointer.buttons,
-                        "Cursor X (Screen)" : this.scene.playerInput.cursorPos.x, 
-                        "Cursor Y (Screen)" : this.scene.playerInput.cursorPos.y 
+                        "Cursor X (Screen)" : this.scene.player.controller.cursorPos.x, 
+                        "Cursor Y (Screen)" : this.scene.player.controller.cursorPos.y 
 
                     };
 

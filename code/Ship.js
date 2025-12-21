@@ -9,9 +9,11 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
 
 
-    constructor(scene, spriteName, x, y, isEnemy) {
+    constructor(scene, spriteName, x, y, controller, isEnemy) {
 
         super(scene, x,y,spriteName);
+
+        this.controller = controller;
 
         // Particle thrust effect, put it here so it's z order puts it behind the actual ship sprite
         this.particleContainer = scene.add.container(0, 0);
@@ -195,12 +197,12 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
       
 
        
-        
+        this.controller.update(this);
 
         
 
 
-        if (this.isEnemy) { this.doAI(); }
+        //if (this.isEnemy) { this.doAI(); }
 
          // Check hp 
         if (this.hp <= 0) {

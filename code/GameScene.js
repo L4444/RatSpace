@@ -115,8 +115,8 @@ class GameScene extends Phaser.Scene {
 
         
          // Create the player ship
-        this.player = new Ship(this, 'player', 1000, 1000, false);
-        this.playerInput = new PlayerInput(this,this.player);
+        this.player = new Ship(this, 'player', 1000, 1000,new KeyboardAndMouseController(this), false);
+        
 
         Ship.playerShip = this.player;
 
@@ -157,7 +157,7 @@ class GameScene extends Phaser.Scene {
         this.enemies = [];
         for (let i = 0; i < 4; i++) {
 
-            this.enemies[i] = new Ship(this, 'enemy' + (i + 1), 1000 + (i * 200), 800, true);
+            this.enemies[i] = new Ship(this, 'enemy' + (i + 1), 1000 + (i * 200), 800, new AIController(this), true);
 
         }
 
@@ -284,7 +284,7 @@ class GameScene extends Phaser.Scene {
 
         if (this.gameState == state.Gameplay) {
             // Center the camera on the player, let PlayerInput deal with smoothness
-            this.cameras.main.setScroll(this.playerInput.cameraPos.x, this.playerInput.cameraPos.y);
+            this.cameras.main.setScroll(this.player.controller.cameraPos.x, this.player.controller.cameraPos.y);
  
 
         }
