@@ -11,11 +11,12 @@ class GameScene extends Phaser.Scene {
 
 
     preload() {
-        this.load.image('player', 'ships/player-2.png');
+        this.load.image('player', 'shiptest/blueship-scaled.png');
         this.load.image('enemy1', 'ships/empire-d.png');
         this.load.image('enemy2', 'ships/empire-d.png');
         this.load.image('enemy3', 'ships/empire-d.png');
         this.load.image('enemy4', 'ships/empire-d.png');
+        this.load.image('enemy5', 'ships/flame-c.png');
 
         this.load.image('back', 'backgrounds/Blue Nebula/Blue Nebula 1 - 1024x1024.png');
         this.load.image('menuBack', 'backgrounds/Green Nebula/Green Nebula 7 - 1024x1024.png');
