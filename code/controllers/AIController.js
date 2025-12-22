@@ -11,6 +11,8 @@ class AIController
 
     update(p)
     {
+        // isActive disables AI (for testing)
+        if(!p.isActive) { return; }
 
         let targetAngle = Phaser.Math.Angle.Between(p.x, p.y, Ship.playerShip.x, Ship.playerShip.y);
 

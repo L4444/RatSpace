@@ -238,6 +238,11 @@ class GameScene extends Phaser.Scene {
         });
 
         this.input.keyboard.on('keyup-F', function (event) {
+            
+              for (let i = 0; i < this.scene.enemies.length; i++) {
+                this.scene.enemies[i].isActive = !this.scene.enemies[i].isActive;
+
+              }
 
 
 

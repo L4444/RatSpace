@@ -77,7 +77,10 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
             this.TURN_SPEED_FACTOR = 20;
             this.MAX_SPEED = 200;
             this.THRUST_SPEED = 200;
-         
+
+            // Disable enemy AI when testing
+            this.isActive = false;
+
         }
         else {
             this.score = 0;
@@ -111,7 +114,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
         // -- Get the measurements of the ship spread and create a hit circle 
         let w = this.displayWidth;
         let h = this.displayHeight;
-        this.body.setCircle(w / 4, w / 4, h / 4);
+        this.body.setCircle(w / 2, 0, 0);
         this.body.setBounce(1, 1); // Ships should bounce enough off each other to prevent "rubbing"
 
         // set hp
@@ -125,7 +128,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
         this.tintTick = 255;
 
-
+      
 
 
     }
@@ -187,8 +190,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
         this.isBoost = true;
     }
 
-    brake()
-    {
+    brake() {
 
         this.isBrake = true;
 
@@ -238,49 +240,48 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
         this.hpBarBack.y = this.hpBarFront.y = this.y - 50;
         this.hpBarFront.displayWidth = (this.hp / 100) * this.displayWidth;
 
-       
+
 
         // If we aren't dead, regen HP slowly
         if (this.hp < 100) { this.hp += 0.1; }
 
 
-        if(this.isBrake)
-        {
-            this.body.setDrag(500,500);
-        }
-        else
-        {
-            this.body.setDrag(0,0);
-        }
-
-
-         // If we are boosting we can't turn
-        if (!this.isBoost) {
-
+        if (this.isBrake) {
+            this.body.setDrag(1000, 1000);
+            this.setAcceleration(0, 0); // Then Activate the thrusters!
             this.rotation = Phaser.Math.Angle.RotateTo(this.rotation, this.targetAngle, this.TURN_SPEED_FACTOR / 1000);
         }
-
-        let boostMultiplier = 1;
-        if (this.isBoost) {
-            this.tX = 1;
-            this.tY = 0;
-            boostMultiplier = 4;
-            this.thruster.start();
-        }
         else {
-            this.thruster.stop();
+            this.body.setDrag(0, 0);
+
+            let boostMultiplier = 1;
+            if (this.isBoost) {
+                this.tX = 1;
+                this.tY = 0;
+                boostMultiplier = 4;
+                this.thruster.start();
+            }
+            else {
+                this.thruster.stop();
+                this.rotation = Phaser.Math.Angle.RotateTo(this.rotation, this.targetAngle, this.TURN_SPEED_FACTOR / 1000);
+
+            }
+
+
+            // Convert the key presses into an actual angle we can use to move the ship.
+            let v = new Phaser.Math.Vector2(this.tX, this.tY);
+            v.normalize();
+            v.rotate(Phaser.Math.DegToRad(this.angle));
+            v.scale(this.THRUST_SPEED * boostMultiplier);
+            this.body.setMaxSpeed(this.MAX_SPEED * boostMultiplier);
+            this.setAcceleration(v.x, v.y); // Then Activate the thrusters!
+
+
 
         }
 
 
 
-        // Convert the key presses into an actual angle we can use to move the ship.
-        let v = new Phaser.Math.Vector2(this.tX, this.tY);
-        v.normalize();
-        v.rotate(Phaser.Math.DegToRad(this.angle)); 
-        v.scale(this.THRUST_SPEED * boostMultiplier);
-        this.body.setMaxSpeed(this.MAX_SPEED * boostMultiplier);
-        this.setAcceleration(v.x, v.y); // Then Activate the thrusters!
 
         // Tick the clock (useful for limiting bullet firing)
         this.clock++;
@@ -298,7 +299,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
         this.particleContainer.y = this.y + thr.y + this.body.velocity.y / 60;
         this.particleContainer.angle = this.angle - 90;
 
-     
+
 
 
 
@@ -308,6 +309,6 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
     rotateTo(targetAngle) {
         this.targetAngle = targetAngle;
     }
-  
+
 
 }
