@@ -244,7 +244,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
         // If we aren't dead, regen HP slowly
         if (this.hp < 100) { this.hp += 0.1; }
 
-        
+        ///
         let boostMultiplier = 1;
         if (this.isBoost) {
             this.tX = 1;
