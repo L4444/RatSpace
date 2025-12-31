@@ -34,7 +34,7 @@ class AIController
         }
        
        
-        p.rotateTo(targetAngle);
+        p.rotateTo(targetAngle + Math.PI / 2);
 
 
 

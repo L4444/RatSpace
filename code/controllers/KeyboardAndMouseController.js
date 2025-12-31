@@ -66,7 +66,7 @@ class KeyboardAndMouseController
             
 
             // Tell the ship what angle they should face
-            myShip.rotateTo(this.targetAngle);
+            myShip.rotateTo(this.targetAngle + Math.PI /2);
             
             
 

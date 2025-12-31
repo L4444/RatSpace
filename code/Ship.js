@@ -1,7 +1,7 @@
 class Ship extends Phaser.Physics.Arcade.Sprite {
 
 
-    
+
 
     static explosionSound;
 
@@ -11,6 +11,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, spriteName, x, y, controller, isEnemy) {
 
         super(scene, x, y, spriteName);
+        this.setDepth(2);
         this.name = spriteName;
 
         this.THRUST_SPEED = 700;
@@ -26,7 +27,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
 
 
-        
+
 
         this.clock = 0;
         this.lastTick = -500;
@@ -42,7 +43,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
             colorEase: 'quad.out',
             lifespan: 200,
 
-            angle: -90,
+            angle: 180,
             scale: { start: 0.20, end: 0.10, ease: 'sine.out' },
             alpha: { start: 1, end: 0 },
 
@@ -98,6 +99,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
         // TODO: Adjust this to account for different image sizes
         // -- Get the measurements of the ship spread and create a hit circle 
+        
         let w = this.displayWidth;
         let h = this.displayHeight;
         this.body.setCircle(w / 2, 0, 0);
@@ -114,7 +116,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
         this.tintTick = 255;
 
-      
+
 
 
     }
@@ -125,7 +127,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
             this.shootSound.play();
 
 
-           this.scene.getBulletManager().shoot(this);
+            this.scene.getBulletManager().shoot(this);
             this.lastTick = this.clock;
 
         }
@@ -134,14 +136,14 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
     left() {
 
 
-        this.tY += -1;
+        this.tX += -1;
 
 
     }
     right() {
 
 
-        this.tY += 1;
+        this.tX += 1;
 
 
     }
@@ -149,13 +151,13 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
 
 
-        this.tX += 1;
+        this.tY -= 1;
     }
     back() {
 
 
+        this.tY += 1;
 
-        this.tX += -1;
     }
 
     boost() {
@@ -228,8 +230,8 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
             let boostMultiplier = 1;
             if (this.isBoost) {
-                this.tX = 1;
-                this.tY = 0;
+                this.tX = 0;
+                this.tY = -1;
                 boostMultiplier = 4;
                 this.thruster.start();
                 this.thruster.visible = true;
@@ -261,7 +263,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
         this.clock++;
 
         // move thruster with ship
-        let thr = new Phaser.Math.Vector2(-31, 0);
+        let thr = new Phaser.Math.Vector2(0, 31);
         thr.rotate(this.rotation);
 
         /// move the container that the emitter and particles are in with the ship

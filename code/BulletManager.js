@@ -10,6 +10,7 @@ class BulletManager
         for( var i = 0; i < 100;i++)
         {
             this.bullets[i] = scene.physics.add.sprite(0, 0, "pew").setCircle(39 / 4, 39 / 4, 39 / 4);
+            this.bullets[i].setDepth(1);
             this.disable(this.bullets[i]);
 
         }
@@ -36,7 +37,7 @@ class BulletManager
             if (parent.isEnemy) { speed = -200; } // Gimp the enemies, to make them easier to dodge
 
             // Use vectors to set the path of the bullet, use the X axis to align with the player ship.
-            let v = new Phaser.Math.Vector2(-speed, 0);
+            let v = new Phaser.Math.Vector2(0, speed);
             v.rotate(parent.rotation);
 
             this.bullets[this.nextBullet].setVelocity(v.x, v.y);
