@@ -21,8 +21,8 @@ class GameScene extends Phaser.Scene {
 
 
     preload() {
-        this.load.image('player', 'ships/2.png');
-        this.load.image('enemy1', 'ships/5.png');
+        this.load.image('player', 'ships/BigShip.png');
+        this.load.image('enemy1', 'ships/BigShip.png');
         this.load.image('enemy2', 'ships/empire-d.png');
         this.load.image('enemy3', 'ships/empire-d.png');
         this.load.image('enemy4', 'ships/empire-d.png');
@@ -167,9 +167,9 @@ class GameScene extends Phaser.Scene {
       
 
         // Make the enemy ships
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < 2; i++) {
 
-            this.ships.push(new Ship(this, 'enemy1', 1000 + (i * 200), 800, new AIController(this), true));
+            this.ships.push(new Ship(this, 'enemy1', 1000 + (i * 200), 600, new AIController(this), true));
 
         }
 
