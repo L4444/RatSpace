@@ -116,6 +116,8 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
         this.tintTick = 255;
 
+        this.testTint = 0xFF88FF;
+
 
 
 
@@ -137,6 +139,8 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
 
         this.tX += -1;
+         this.tintTopRight = this.testTint ;
+        this.tintBottomRight =this.testTint ;
 
 
     }
@@ -144,7 +148,8 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
 
         this.tX += 1;
-
+        this.tintTopLeft =this.testTint;
+        this.tintBottomLeft = this.testTint;
 
     }
     forward() {
@@ -152,11 +157,15 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
 
         this.tY -= 1;
+         this.tintBottomRight =this.testTint ;
+        this.tintBottomLeft = this.testTint ;
     }
     back() {
 
 
         this.tY += 1;
+                 this.tintTopRight =this.testTint ;
+        this.tintTopLeft = this.testTint ;
 
     }
 
