@@ -9,9 +9,9 @@ class BulletManager
 
         for( var i = 0; i < 100;i++)
         {
-            this.bullets[i] = scene.physics.add.sprite(0, 0, "pew").setCircle(39 / 4, 39 / 4, 39 / 4);
+            this.bullets[i] = new Bullet(this.scene, this, 'pew');
             this.bullets[i].setDepth(1);
-            this.disable(this.bullets[i]);
+            this.bullets[i].disable();
 
         }
 
@@ -22,16 +22,13 @@ class BulletManager
         return this.bullets;
     }
 
-    disable(bullet)
-    {
-        bullet.x = -9999;
-        bullet.y = -9999;
-    }
+   
 
     shoot(parent)
     {
          this.bullets[this.nextBullet].x = parent.x;
             this.bullets[this.nextBullet].y = parent.y;
+            this.bullets[this.nextBullet].lifetime = 40;
 
             let speed = -800;
             if (parent.isEnemy) { speed = -200; } // Gimp the enemies, to make them easier to dodge
