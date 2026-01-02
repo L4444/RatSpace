@@ -123,11 +123,11 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
     shoot() {
 
 
-        if (this.clock > this.lastTick + 20) {
-            this.shootSound.play();
+        if (this.clock > this.lastTick + 1) {
+            //this.shootSound.play();
 
 
-            this.scene.getBulletManager().shoot(this);
+            this.scene.getBulletManager().shoot(this, 'bigPew');
             this.lastTick = this.clock;
 
         }
