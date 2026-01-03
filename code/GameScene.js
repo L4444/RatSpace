@@ -38,7 +38,7 @@ class GameScene extends Phaser.Scene {
         this.load.image('bigPew', 'bullets/pew-big-green.png');
         this.load.image('red', 'red.png')
 
-        this.load.image('earth', 'Terran1.png')
+        this.load.image('earth', 'planets/Terran1.png')
 
 
 
