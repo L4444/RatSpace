@@ -200,13 +200,19 @@ class GameScene extends Phaser.Scene {
 
 
         this.debugText = new DebugText(this, 10, 30);
-        this.helpText = this.add.text(10, 10, "Press F1 to cycle through help menus"); this.helpText.setScrollFactor(0);
+        this.helpText = this.add.text(10, 10, "Press F1 to cycle through help menus"); 
+        this.helpText.setScrollFactor(0);
         this.helpText.visible = false; // Don't show the help text in the "Main Menu"
+        this.helpText.setDepth(SpriteLayer.UI);
 
 
-        this.pauseText = this.add.text(400, 400, "Paused - Press escape to unpause"); this.pauseText.setScrollFactor(0);
+        this.pauseText = this.add.text(400, 400, "Paused - Press escape to unpause"); 
+        this.pauseText.setScrollFactor(0);
+        this.pauseText.setDepth(SpriteLayer.UI);
 
-        this.scoreText = this.add.text(600, 10, ""); this.scoreText.setScrollFactor(0);
+        this.scoreText = this.add.text(600, 10, "");
+         this.scoreText.setScrollFactor(0);
+         this.scoreText.setDepth(SpriteLayer.UI);
 
 
 
