@@ -1,20 +1,18 @@
 class GameScene extends Phaser.Scene {
 
-    
-   
+
+
 
     constructor() {
         super('GameScene');
 
     }
 
-    getPlayer()
-    {
+    getPlayer() {
         return this.ships[0];
     }
 
-    getBulletManager()
-    {
+    getBulletManager() {
         return this.bulletManager;
     }
 
@@ -37,6 +35,7 @@ class GameScene extends Phaser.Scene {
         this.load.image('flare', 'particles/flare.png');
 
         this.load.image('pew', 'bullets/pew-yellow.png');
+        this.load.image('bigPew', 'bullets/pew-big-green.png');
         this.load.image('red', 'red.png')
 
         var u;
@@ -70,7 +69,7 @@ class GameScene extends Phaser.Scene {
 
         console.log("Preloading done");
 
-        
+
 
     }
 
@@ -85,7 +84,7 @@ class GameScene extends Phaser.Scene {
 
     create() {
 
-        
+
 
 
         // Disable mouse click context menu
@@ -93,48 +92,48 @@ class GameScene extends Phaser.Scene {
             e.preventDefault();
         });
 
-      
 
-        this.gameBackground = new GameBackground(this, 'back',1000,1000,1024 * 3,1024 * 3);
-        
-    
+
+        this.gameBackground = new GameBackground(this, 'back', 1000, 1000, 1024 * 3, 1024 * 3);
+
+
         this.statics = []
         for (var i = 0; i < 16; i++) {
             var x = i % 4;
             var y = Math.floor(i / 4);
 
             // Create an asteroid to help player orient themselves
-            this.statics.push( new Asteroid(this, 'asteroid', x * 800, y * 800, i * 20));
-        
+            this.statics.push(new Asteroid(this, 'asteroid', x * 800, y * 800, i * 20));
+
         }
 
-        
 
-    
+
+
         let boundSize = 2000;
         let wallThickness = 200
         // Create the "walls", for out of bounds
-        this.statics.push(new Wall(this, 'red', 1000, 1000-boundSize, boundSize * 2, wallThickness)); ///Top
-        this.statics.push(new Wall(this, 'red', 1000+boundSize,1000, wallThickness, boundSize * 2 )); // Right
-        this.statics.push(new Wall(this, 'red', 1000, 1000+boundSize, boundSize * 2, wallThickness)); // Bottom
-        this.statics.push(new Wall(this, 'red', 1000-boundSize,1000, wallThickness, boundSize * 2 )); // Left
-        
-        
-        
-        
-        
+        this.statics.push(new Wall(this, 'red', 1000, 1000 - boundSize, boundSize * 2, wallThickness)); ///Top
+        this.statics.push(new Wall(this, 'red', 1000 + boundSize, 1000, wallThickness, boundSize * 2)); // Right
+        this.statics.push(new Wall(this, 'red', 1000, 1000 + boundSize, boundSize * 2, wallThickness)); // Bottom
+        this.statics.push(new Wall(this, 'red', 1000 - boundSize, 1000, wallThickness, boundSize * 2)); // Left
+
+
+
+
+
 
         this.ships = [];
 
-         // Create the player ship
-        this.ships.push(new Ship(this, 'player', 1000, 1000,new KeyboardAndMouseController(this), false));
-        
+        // Create the player ship
+        this.ships.push(new Ship(this, 'player', 1000, 1000, new KeyboardAndMouseController(this), false));
 
-        
 
-        
-        
-        
+
+
+
+
+
 
 
         // Create music objects
@@ -164,7 +163,7 @@ class GameScene extends Phaser.Scene {
 
         }
 
-      
+
 
         // Make the enemy ships
         for (let i = 0; i < 2; i++) {
@@ -173,7 +172,7 @@ class GameScene extends Phaser.Scene {
 
         }
 
-        
+
 
 
 
@@ -185,11 +184,11 @@ class GameScene extends Phaser.Scene {
         this.gameLogo = this.add.sprite(450, 350, 'logo');
 
 
-        
 
 
 
-        this.debugText = new DebugText(this, 10,30);
+
+        this.debugText = new DebugText(this, 10, 30);
         this.helpText = this.add.text(10, 10, "Press F1 to cycle through help menus"); this.helpText.setScrollFactor(0);
         this.helpText.visible = false; // Don't show the help text in the "Main Menu"
 
@@ -198,13 +197,13 @@ class GameScene extends Phaser.Scene {
 
         this.scoreText = this.add.text(600, 10, ""); this.scoreText.setScrollFactor(0);
 
-     
+
 
         // Toggle the help text that shows how to control and has some debug info
         this.input.keyboard.on('keyup-F1', function (event) {
             this.scene.debugText.switchInfoType();
-             
-                
+
+
         });
 
         this.input.keyboard.on('keyup-ONE', function (event) { if (!this.scene.menuMusic.isPlaying) { this.game.sound.stopAll(); this.scene.menuMusic.play(); } })
@@ -241,7 +240,7 @@ class GameScene extends Phaser.Scene {
         this.input.keyboard.on('keyup-Q', function (event) {
 
             this.scene.getPlayer().TURN_SPEED_FACTOR += 1;
-            
+
         });
 
         this.input.keyboard.on('keyup-E', function (event) {
@@ -249,49 +248,65 @@ class GameScene extends Phaser.Scene {
         });
 
         this.input.keyboard.on('keyup-F', function (event) {
-            
-            
-              for (let i = 0; i < this.scene.ships.length; i++) {
+
+
+            for (let i = 0; i < this.scene.ships.length; i++) {
                 this.scene.ships[i].isActive = !this.scene.ships[i].isActive;
                 console.log('keyu2p');
 
-              }
+            }
 
 
 
         });
         this.input.keyboard.on('keyup-G', function (event) {
-             this.scene.physics.world.drawDebug = !this.scene.physics.world.drawDebug;
+            this.scene.physics.world.drawDebug = !this.scene.physics.world.drawDebug;
             this.scene.physics.world.debugGraphic.clear();
 
 
 
         });
 
-       this.bulletManager = new BulletManager(this);
+        this.bulletManager = new BulletManager(this);
 
-            this.physics.add.collider(this.ships, this.statics, function (pShip, eShip, body1, body2) {
-                console.log(pShip.name + " hit asteroid ");
-            });
 
-            this.physics.add.collider(this.ships, this.ships, function (pShip, eShip, body1, body2) {
-                 //pShip.hp -= 10; eShip.hp -= 10;
-                if (pShip.hp > 0) { pShip.hitSound.play(); }
-            });
-        
-             this.physics.add.overlap(this.ships, this.bulletManager.getBullets(), function (hitShip, hitBullet, body1, body2) {
-                
-                    if(hitShip != hitBullet.owner)
-                    {
-                    console.log(hitShip.name + ' hit');
-                    hitShip.tintTick = 0;
-                    hitShip.hp -= 20;
-                    //if(hitShip.hp > 0) {hitShip.hitSound.play();} /// This is a horrible sound
-                    hitBullet.x = -9999; hitBullet.y = -9999;
-                    hitShip.setVelocity(hitBullet.body.velocity.x, hitBullet.body.velocity.y);
-                    hitBullet.setVelocity(0, 0);
-                    }
-                });
+        // 1) Check for ship to static (asteroid, wall etc.) collisions
+        this.physics.add.collider(this.ships, this.statics, function (pShip, eShip, body1, body2) {
+            console.log(pShip.name + " hit asteroid ");
+        });
+
+        // 2) Check for ship to ship collisions
+        this.physics.add.collider(this.ships, this.ships, function (pShip, eShip, body1, body2) {
+            //pShip.hp -= 10; eShip.hp -= 10;
+            if (pShip.hp > 0) { pShip.hitSound.play(); }
+        });
+
+        // 3) Check for ship to bullet collisions
+        this.physics.add.overlap(this.ships, this.bulletManager.getBullets(), function (hitShip, hitBullet, body1, body2) {
+
+            if (hitShip != hitBullet.owner) {
+                console.log(hitShip.name + ' hit');
+                hitShip.tintTick = 0;
+                hitShip.hp -= 2;
+                //if(hitShip.hp > 0) {hitShip.hitSound.play();} /// This is a horrible sound
+                hitShip.setVelocity(hitBullet.body.velocity.x, hitBullet.body.velocity.y);
+                hitBullet.disable();
+
+
+            }
+        });
+
+        // 4) Finally, check for bullet to static collisions.
+        this.physics.add.overlap(this.statics, this.bulletManager.getBullets(), function (hitStatic, hitBullet, body1, body2) {
+
+           
+                hitBullet.disable();
+
+
+            
+        });
+
+
 
         // Start game
         this.gameState = state.Menu;
@@ -300,10 +315,10 @@ class GameScene extends Phaser.Scene {
         this.resumeGame();
 
 
-     
+
         this.getPlayer().score = 0;
 
-     
+
         this.cameraX = 0;
         this.cameraY = 0;
 
@@ -315,13 +330,14 @@ class GameScene extends Phaser.Scene {
 
         console.log('Objects created');
 
-        
+
     }
 
 
 
     update() {
-        
+
+
         // Cheesy scrolling background
         this.menuBack.tilePositionY -= 1;
 
@@ -332,7 +348,7 @@ class GameScene extends Phaser.Scene {
         if (this.gameState == state.Gameplay) {
             // Center the camera on the player, let PlayerInput deal with smoothness
             this.cameras.main.setScroll(this.getPlayer().controller.cameraPos.x, this.getPlayer().controller.cameraPos.y);
- 
+
 
         }
 

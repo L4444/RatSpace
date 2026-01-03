@@ -66,6 +66,7 @@ class DebugText extends Phaser.GameObjects.Text {
                         "Player Boost" : this.scene.getPlayer().isBoost,
                         "Player Brake" : this.scene.getPlayer().isBrake,
                         "Enemy AI Active?" : this.scene.ships[1].isActive 
+                    
 
                     };
 

@@ -99,6 +99,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
         // TODO: Adjust this to account for different image sizes
         // -- Get the measurements of the ship spread and create a hit circle 
+        
         let w = this.displayWidth;
         let h = this.displayHeight;
         this.body.setCircle(w / 2, 0, 0);
@@ -122,11 +123,11 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
     shoot() {
 
 
-        if (this.clock > this.lastTick + 20) {
-            this.shootSound.play();
+        if (this.clock > this.lastTick + 1) {
+            //this.shootSound.play();
 
 
-            this.scene.getBulletManager().shoot(this);
+            this.scene.getBulletManager().shoot(this, 'bigPew');
             this.lastTick = this.clock;
 
         }
