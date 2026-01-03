@@ -66,7 +66,10 @@ class DebugText extends Phaser.GameObjects.Text {
                         "Cursor Y (Screen)" : this.scene.getPlayer().controller.cursorPos.y,
                         "Player Boost" : this.scene.getPlayer().isBoost,
                         "Player Brake" : this.scene.getPlayer().isBrake,
-                        "Enemy AI Active?" : this.scene.ships[1].isActive 
+                        "Enemy AI Active?" : this.scene.ships[1].isActive ,
+                        "Enemy Rotation" : this.scene.ships[1].rotation,
+                        "Enemy TargetAngle" : this.scene.ships[1].controller.targetAngle
+
                     
 
                     };

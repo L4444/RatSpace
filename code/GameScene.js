@@ -176,8 +176,8 @@ class GameScene extends Phaser.Scene {
 
 
 
-        // Make the enemy ships
-        for (let i = 0; i < 2; i++) {
+        // Make the enemy ship
+        for (let i = 0; i < 1; i++) {
 
             this.ships.push(new Ship(this, 'enemy1', 1000 + (i * 200), 600, new AIController(this), true));
 
