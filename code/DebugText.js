@@ -13,7 +13,7 @@ class DebugText extends Phaser.GameObjects.Text {
         this.scene = scene;
 
  
-        this.infoType = 1;
+        this.infoType = 0;
         this.testVars = [];
 
     }
@@ -36,7 +36,8 @@ class DebugText extends Phaser.GameObjects.Text {
        this.testVars[0] = {
                         "-----------Controls-----------": "-",
                         "W,S,A,D for movement": "-",
-                        "Left click for shoot" : "-",
+                        "Left click to shoot machine gun" : "-",
+                        "Right click to fire blaster" : "-",
                         "Shift for Boost" : "-",
                         "Spacebar for Brake" : "-",
                         "1 for menu music" : "-",

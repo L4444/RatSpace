@@ -49,21 +49,28 @@ class Bullet extends Phaser.Physics.Arcade.Sprite {
 
     }
 
-    fire(parent, spriteName) {
+    fire(parent, bulletData) {
+
+        
+
+        
+                
+
         this.enableBody(true, parent.x, parent.y, true, true);
-        this.setTexture(spriteName);
+        this.setTexture(bulletData.spriteName);
          this.setCircle(this.width / 4, this.width / 4, this.width / 4);
 
-        this.lifetime = 20;
+        this.lifetime = (bulletData.range / bulletData.speed) * 250;
 
-        let speed = -1200;
-        if (parent.isEnemy) { speed = -1200; } // Gimp the enemies, to make them easier to dodge
+      
 
         // Use vectors to set the path of the bullet, use the X axis to align with the player ship.
-        let v = new Phaser.Math.Vector2(0, speed);
+        let v = new Phaser.Math.Vector2(0, -bulletData.speed);
         v.rotate(parent.rotation);
 
         this.setVelocity(v.x + parent.body.velocity.x, v.y + parent.body.velocity.y);
+
+        this.damage = bulletData.damageValue;
 
 
         this.rotation = parent.rotation;

@@ -58,6 +58,8 @@ class GameScene extends Phaser.Scene {
         // load shooting sounds
         this.load.audio('shoot1', 'sounds/alienshoot1.wav');
         this.load.audio('shoot2', 'sounds/alienshoot2.wav');
+        this.load.audio('mg','sounds/Futuristic SMG Single Shot.wav');
+
 
         // load all the explosion sounds
         for (let i = 0; i < 9; i++) {
@@ -296,7 +298,7 @@ class GameScene extends Phaser.Scene {
             if (hitShip != hitBullet.owner) {
                 console.log(hitShip.name + ' hit');
                 hitShip.tintTick = 0;
-                hitShip.hp -= 2;
+                hitShip.hp -= hitBullet.damage;
                 //if(hitShip.hp > 0) {hitShip.hitSound.play();} /// This is a horrible sound
                 //hitShip.setVelocity(hitBullet.body.velocity.x, hitBullet.body.velocity.y);
                 hitBullet.disable();
@@ -331,7 +333,7 @@ class GameScene extends Phaser.Scene {
         this.cameraX = 0;
         this.cameraY = 0;
 
-        this.infoMode = 1;
+        
 
         // Turn off physics wireframes, due to the way phaser works...
         //  I have to enable it on config and disable it here if I want to "toggle" it at runtime

@@ -19,8 +19,8 @@ class BulletManager {
 
 
 
-    shoot(parent, spriteName) {
-        this.bullets[this.nextBullet].fire(parent,spriteName);
+    shoot(parent, bulletData) {
+        this.bullets[this.nextBullet].fire(parent,bulletData);
 
         if (this.nextBullet < this.bullets.length - 1) { this.nextBullet++; } else { this.nextBullet = 0; }
 

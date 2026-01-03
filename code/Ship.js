@@ -90,6 +90,8 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
             this.hitSound = scene.sound.add('hitPlayerSound', { loop: false });
         }
 
+        
+
 
         this.shootSound.volume = 0.3;
 
@@ -99,7 +101,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
         // TODO: Adjust this to account for different image sizes
         // -- Get the measurements of the ship spread and create a hit circle 
-        
+
         let w = this.displayWidth;
         let h = this.displayHeight;
         this.body.setCircle(w / 2, 0, 0);
@@ -107,8 +109,8 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
         // set hp
         this.hp = 100;
-        this.hpBarBack = scene.add.rectangle(0, 0, this.displayWidth, 10, 0x000000, 1);
-        this.hpBarFront = scene.add.rectangle(0, 0, this.displayWidth, 5, 0x336633, 1);
+        this.hpBarBack = scene.add.rectangle(0, 0, this.displayWidth, 10, 0x000000, 1); this.hpBarBack.setDepth(3);
+        this.hpBarFront = scene.add.rectangle(0, 0, this.displayWidth, 5, 0x336633, 1);this.hpBarFront.setDepth(3);
         // Setup explosion effect
         this.explosion = scene.add.sprite(-9999, -9999, 'boom14');
         this.explosion.setScale(0.5);
@@ -117,20 +119,67 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
         this.tintTick = 255;
 
 
+        /// 100 range should be to the edge of the screen without scrolling
+        this.weaponSystems = [];
+
+        this.mg = scene.sound.add('mg', { loop: false });
+        this.mg.volume =  0.1;
+        this.weaponSystems[1] = {
+            spriteName: 'pew',
+            speed: 1200,
+            range: 100,
+            refireDelay: 2,
+            shootSound: this.mg,
+            damageValue: 1
+        }
+
+        this.pew =  scene.sound.add('shoot2', { loop: false });
+        this.pew.volume = 0.5;
+        this.weaponSystems[2] = {
+            spriteName: 'bigPew',
+            speed: 600,
+            range: 150,
+            refireDelay: 40,
+            shootSound: this.pew,
+            damageValue: 30
+        }
+
+
+
+        for(var i = 1; i < this.weaponSystems.length; i++)
+        {
+            this.weaponSystems[i].clock = 0;
+            this.weaponSystems[i].lastTick = 0;
+        }
+
 
 
     }
-    shoot() {
+    shoot(weaponNumber) {
 
-
-        if (this.clock > this.lastTick + 1) {
-            //this.shootSound.play();
-
-
-            this.scene.getBulletManager().shoot(this, 'bigPew');
-            this.lastTick = this.clock;
-
+        if(weaponNumber == 0)
+        {
+            throw new Error("weaponNumber cannot be 0. The first weapon is 1!");
         }
+
+        let ws =  this.weaponSystems[weaponNumber];
+        
+
+
+    
+            if (ws.clock > ws.lastTick + ws.refireDelay) {
+                
+              ws.shootSound.play();
+
+                
+
+
+                this.scene.getBulletManager().shoot(this, ws);
+                ws.lastTick = ws.clock;
+
+            }
+        
+
 
     }
     left() {
@@ -209,9 +258,13 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
         }
 
         // line up the hp bar, Do this AFTER checking hp so that when we move the hp bar doesn't look glitchy
-        this.hpBarBack.x = this.x;
+        
+       
+         this.hpBarBack.x = this.x;
+        this.hpBarBack.y = this.y - this.displayHeight /2;
+
         this.hpBarFront.x = this.x + ((this.hp / 100) * this.displayWidth / 2) - this.displayWidth / 2;
-        this.hpBarBack.y = this.hpBarFront.y = this.y - 50;
+        this.hpBarFront.y = this.hpBarBack.y;
         this.hpBarFront.displayWidth = (this.hp / 100) * this.displayWidth;
 
 
@@ -260,7 +313,10 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
 
         // Tick the clock (useful for limiting bullet firing)
-        this.clock++;
+        for(var i = 1; i < this.weaponSystems.length; i++)
+        {
+        this.weaponSystems[i].clock++;
+        }
 
         // move thruster with ship
         let thr = new Phaser.Math.Vector2(0, 31);
