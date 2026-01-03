@@ -1,12 +1,6 @@
 class Ship extends Phaser.Physics.Arcade.Sprite {
 
-
-
-
     static explosionSound;
-
-
-
 
     constructor(scene, spriteName, x, y, controller, isEnemy) {
 
@@ -17,23 +11,21 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
         this.THRUST_SPEED = 700;
         this.TURN_SPEED_FACTOR = 80;
         this.MAX_SPEED = 500;
+        
+/*
+        this.THRUST_SPEED = 200;
+        this.TURN_SPEED_FACTOR = 10;
+        this.MAX_SPEED = 500;
+        */
 
         this.controller = controller;
 
         // Particle thrust effect, put it here so it's z order puts it behind the actual ship sprite
         this.particleContainer = scene.add.container(0, 0);
-
         this.flame = scene.add.particles('flare');
-
-
-
-
 
         this.clock = 0;
         this.lastTick = -500;
-
-
-
 
         this.thruster = this.flame.createEmitter({
             x: 0,
@@ -53,13 +45,6 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
         });
         this.particleContainer.add(this.flame);
 
-
-
-
-
-
-
-
         this.isEnemy = isEnemy;
         if (isEnemy) {
             this.TURN_SPEED_FACTOR = 20;
@@ -76,7 +61,6 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
         this.tX = 0.0;
         this.tY = 0.0;
-
 
         if (isEnemy) {
             this.shootSound = scene.sound.add('shoot2', { loop: false });
@@ -115,9 +99,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
         this.explosion = scene.add.sprite(-9999, -9999, 'boom14');
         this.explosion.setScale(0.5);
 
-
         this.tintTick = 255;
-
 
         /// 100 range should be to the edge of the screen without scrolling
         this.weaponSystems = [];
@@ -133,7 +115,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
             damageValue: 1
         }
 
-        this.pew =  scene.sound.add('shoot2', { loop: false });
+        this.pew = scene.sound.add('shoot2', { loop: false });
         this.pew.volume = 0.5;
         this.weaponSystems[2] = {
             spriteName: 'bigPew',
@@ -144,16 +126,11 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
             damageValue: 30
         }
 
-
-
         for(var i = 1; i < this.weaponSystems.length; i++)
         {
             this.weaponSystems[i].clock = 0;
             this.weaponSystems[i].lastTick = 0;
         }
-
-
-
     }
     shoot(weaponNumber) {
 
@@ -162,51 +139,25 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
             throw new Error("weaponNumber cannot be 0. The first weapon is 1!");
         }
 
-        let ws =  this.weaponSystems[weaponNumber];
-        
+        let ws = this.weaponSystems[weaponNumber];
 
-
-    
-            if (ws.clock > ws.lastTick + ws.refireDelay) {
-                
-              ws.shootSound.play();
-
-                
-
-
-                this.scene.getBulletManager().shoot(this, ws);
-                ws.lastTick = ws.clock;
-
-            }
-        
-
-
+        if (ws.clock > ws.lastTick + ws.refireDelay) {
+            ws.shootSound.play();
+            this.scene.getBulletManager().shoot(this, ws);
+            ws.lastTick = ws.clock;
+        }
     }
     left() {
-
-
         this.tX += -1;
-
-
     }
     right() {
-
-
         this.tX += 1;
-
-
     }
     forward() {
-
-
-
         this.tY -= 1;
     }
     back() {
-
-
         this.tY += 1;
-
     }
 
     boost() {
@@ -214,9 +165,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
     }
 
     brake() {
-
         this.isBrake = true;
-
     }
     preUpdate(time, delta) {
         this.tintTick += 5;
@@ -245,8 +194,6 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
                 this.x = 0;
                 this.y = 0;
                 this.scene.getPlayer().score += 100;
-
-
             }
 
             // Play explosion sound effect.
@@ -258,9 +205,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
         }
 
         // line up the hp bar, Do this AFTER checking hp so that when we move the hp bar doesn't look glitchy
-        
-       
-         this.hpBarBack.x = this.x;
+        this.hpBarBack.x = this.x;
         this.hpBarBack.y = this.y - this.displayHeight /2;
 
         this.hpBarFront.x = this.x + ((this.hp / 100) * this.displayWidth / 2) - this.displayWidth / 2;
@@ -271,7 +216,6 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
         // If we aren't dead, regen HP slowly
         if (this.hp < 100) { this.hp += 0.1; }
-
 
         if (this.isBrake) {
             this.body.setDrag(1000, 1000);
