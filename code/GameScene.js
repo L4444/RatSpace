@@ -41,6 +41,8 @@ class GameScene extends Phaser.Scene {
         this.load.image('earth', 'planets/Terran1.png')
 
 
+        this.load.image('shield', 'effects/shield3/00.png');
+
 
         var u;
         for (var i = 0; i < 15; i++) {
@@ -245,29 +247,7 @@ class GameScene extends Phaser.Scene {
             }
 
         });
-        this.input.keyboard.on('keyup-LEFT', function (event) {
-            this.scene.getPlayer().THRUST_SPEED -= 20;
-        });
-
-        this.input.keyboard.on('keyup-RIGHT', function (event) {
-            this.scene.getPlayer().THRUST_SPEED += 20;
-        });
-        this.input.keyboard.on('keyup-UP', function (event) {
-            this.scene.getPlayer().MAX_SPEED += 20;
-        });
-        this.input.keyboard.on('keyup-DOWN', function (event) {
-            this.scene.getPlayer().MAX_SPEED -= 20;
-        });
-
-        this.input.keyboard.on('keyup-Q', function (event) {
-
-            this.scene.getPlayer().TURN_SPEED_FACTOR += 1;
-
-        });
-
-        this.input.keyboard.on('keyup-E', function (event) {
-            this.scene.getPlayer().TURN_SPEED_FACTOR -= 1;
-        });
+      
 
         this.input.keyboard.on('keyup-F', function (event) {
 
