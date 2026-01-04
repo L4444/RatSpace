@@ -182,44 +182,13 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
       this.tintTick = 255;
     }
 
-    this.tint = "0xFF" + this.tintTick.toString(16) + "FF";
+    this.shield.alpha = (255 - this.tintTick) / 255;
 
     this.tX = 0;
     this.tY = 0;
     this.isBoost = false;
     this.isBrake = false;
     this.controller.update(this);
-
-    // Check hp
-    if (this.hp <= 0) {
-      this.explosion.x = this.x;
-      this.explosion.y = this.y;
-      this.explosion.play("explode");
-
-      if (this.isEnemy) {
-        this.x = 0;
-        this.y = 0;
-        this.scene.getPlayer().score += 100;
-      }
-
-      // Play explosion sound effect.
-      var r = Math.floor(Math.random() * 9);
-
-      Ship.explosionSound[r].play();
-
-      this.hp = 100;
-    }
-
-    // line up the hp bar, Do this AFTER checking hp so that when we move the hp bar doesn't look glitchy
-    this.hpBarBack.x = this.x;
-    this.hpBarBack.y = this.y - this.displayHeight / 2;
-
-    this.hpBarFront.x =
-      this.x +
-      ((this.hp / 100) * this.displayWidth) / 2 -
-      this.displayWidth / 2;
-    this.hpBarFront.y = this.hpBarBack.y;
-    this.hpBarFront.displayWidth = (this.hp / 100) * this.displayWidth;
 
     // If we aren't dead, regen HP slowly
     if (this.hp < 100) {
@@ -282,6 +251,37 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
     this.particleContainer.x = this.x + thr.x;
     this.particleContainer.y = this.y + thr.y;
     this.particleContainer.angle = this.angle - 90;
+
+    // Check hp
+    if (this.hp <= 0) {
+      this.explosion.x = this.x;
+      this.explosion.y = this.y;
+      this.explosion.play("explode");
+
+      if (this.isEnemy) {
+        this.x = 0;
+        this.y = 0;
+        this.scene.getPlayer().score += 100;
+      }
+
+      // Play explosion sound effect.
+      var r = Math.floor(Math.random() * 9);
+
+      Ship.explosionSound[r].play();
+
+      this.hp = 100;
+    }
+
+    // line up the hp bar, Do this AFTER checking hp so that when we move the hp bar doesn't look glitchy
+    this.hpBarBack.x = this.x;
+    this.hpBarBack.y = this.y - this.displayHeight / 2;
+
+    this.hpBarFront.x =
+      this.x +
+      ((this.hp / 100) * this.displayWidth) / 2 -
+      this.displayWidth / 2;
+    this.hpBarFront.y = this.hpBarBack.y;
+    this.hpBarFront.displayWidth = (this.hp / 100) * this.displayWidth;
   }
   rotateTo(targetAngle) {
     this.targetAngle = targetAngle;

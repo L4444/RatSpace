@@ -217,12 +217,12 @@ class GameScene extends Phaser.Scene {
     }
 
     // Make the enemy ships
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 1; i++) {
       this.ships.push(
         new Ship(
           this,
           alienDestroyer,
-          1000 + i * 200,
+          1000 + i * 400,
           600,
           new AIController(this),
           true
