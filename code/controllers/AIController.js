@@ -38,7 +38,7 @@ class AIController {
 
     if (this.isAggressive) {
       if (isClose) {
-        p.shoot(1);
+        p.shoot(0);
       } else {
         p.forward();
       }

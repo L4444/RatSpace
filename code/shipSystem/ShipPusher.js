@@ -1,13 +1,13 @@
-class PlasmaCannon extends ShipSystem {
+class ShipPusher extends ShipSystem {
   constructor(scene, parent) {
-    super(scene, parent, "PlasmaCannon", 0.1, 10);
+    super(scene, parent, "MachineGun", 0.3, 20);
 
     this.pm = scene.getProjectileManager();
   }
 
   onActivate() {
     let projData = {
-      spriteName: "PlasmaCannon",
+      spriteName: "MachineGun",
       speed: 600,
       range: 300,
       energyCost: 33,
@@ -18,6 +18,6 @@ class PlasmaCannon extends ShipSystem {
   }
 
   onHit(hitShip) {
-    hitShip.dealDamage(10);
+    hitShip.body.velocity.x += 100;
   }
 }

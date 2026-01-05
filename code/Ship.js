@@ -110,13 +110,14 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
     this.weapons = [];
 
     this.weapons.push(new PlasmaCannon(scene, this));
+    this.weapons.push(new ShipPusher(scene, this));
 
     // Post update, the preUpdate() function calls BEFORE physics update so if I sync
     // the other elements (e.g. shield/thruster) they will lag slightly behind.
     scene.events.on("postupdate", this.postUpdate, this);
   }
   shoot(weaponNumber) {
-    this.weapons[0].use();
+    this.weapons[weaponNumber].use();
   }
   left() {
     this.tX += -1;

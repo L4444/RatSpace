@@ -25,7 +25,8 @@ class CollisionManager {
       projectileMananger.getProjectiles(),
       function (hitShip, hitProj, body1, body2) {
         if (hitShip != hitProj.owner) {
-          hitShip.dealDamage(hitProj.damage);
+          // Apply the weapon's onHit effect to the target ship
+          hitProj.weapon.onHit(hitShip);
           hitProj.disable();
         }
       }

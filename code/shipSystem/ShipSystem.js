@@ -17,15 +17,8 @@ class ShipSystem extends Phaser.GameObjects.GameObject {
   use() {
     if (this.cooldownRemaining == 0) {
       this.cooldownRemaining = this.cooldownDuration;
-
       this.useSound.play();
       this.onActivate();
-    } else {
-      if (this.cooldownDuration > 10) {
-        console.log(
-          "On cooldown " + this.cooldownRemaining + " ticks remaining"
-        );
-      }
     }
   }
 
@@ -41,7 +34,7 @@ class ShipSystem extends Phaser.GameObjects.GameObject {
   }
 
   // This function should be overrided in the child class
-  onHit() {
+  onHit(hitShip) {
     throw new Error(
       "You need to implement your own onHit() function when you extend this class"
     );

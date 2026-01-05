@@ -72,6 +72,7 @@ class Projectile extends Phaser.Physics.Arcade.Sprite {
     );
 
     this.damage = projectileData.damageValue;
+    this.weapon = projectileData.weapon;
 
     this.rotation = parent.rotation;
     // Assign the projectile's "owner" so ships can't damage themselves
