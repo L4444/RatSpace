@@ -317,6 +317,10 @@ class GameScene extends Phaser.Scene {
       this.scene.physics.world.debugGraphic.clear();
     });
 
+    this.input.keyboard.on("keyup-Q", function (event) {
+      this.scene.shipSystem.use();
+    });
+
     this.projectileManager = new ProjectileManager(this);
 
     this.collisionManager = new CollisionManager(
@@ -342,6 +346,9 @@ class GameScene extends Phaser.Scene {
     this.physics.world.drawDebug = false;
 
     console.log("Objects created");
+
+    // Testing ShipSystem classes
+    this.shipSystem = new PlasmaCannon(this, this.getPlayer());
   }
 
   update() {
