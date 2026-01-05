@@ -2,7 +2,7 @@ class Asteroid extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, spriteName, x, y, tint) {
     super(scene, x, y, spriteName);
 
-    // Manually add ship to scene and physics (contructor doesn't do this for us)
+    // Manually add this to scene and physics (contructor doesn't do this for us)
     scene.add.existing(this);
     scene.physics.add.existing(this);
 

@@ -3,7 +3,7 @@ class Bullet extends Phaser.Physics.Arcade.Sprite {
     // pass in a "dummy sprite" when they are created, later on the texture gets set
     super(scene, 999, 999, "red");
 
-    // Manually add ship to scene and physics (contructor doesn't do this for us)
+    // Manually add this to scene and physics (contructor doesn't do this for us)
     scene.add.existing(this);
     scene.physics.add.existing(this);
 

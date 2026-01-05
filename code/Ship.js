@@ -73,24 +73,11 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
     // set hp
     this.hp = 100;
-    this.hpBarBack = scene.add.rectangle(
-      0,
-      0,
-      this.displayWidth,
-      10,
-      0x000000,
-      1
-    );
-    this.hpBarBack.setDepth(SpriteLayer.HP);
-    this.hpBarFront = scene.add.rectangle(
-      0,
-      0,
-      this.displayWidth,
-      5,
-      0x336633,
-      1
-    );
-    this.hpBarFront.setDepth(SpriteLayer.HP);
+    this.hpBar = new ValueBar(scene, this, 0, 0x336633);
+
+    this.energy = 100;
+    this.energyBar = new ValueBar(scene, this, 10, 0x333366);
+
     // Setup explosion effect
     this.explosion = scene.add.sprite(-9999, -9999, "boom14");
     this.explosion.setScale(0.5);
@@ -113,7 +100,8 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
       range: 100,
       refireDelay: 2,
       shootSound: this.mg,
-      damageValue: 1,
+      damageValue: 3,
+      energyCost: 5,
     };
 
     this.pew = scene.sound.add("shoot2", { loop: false });
@@ -125,6 +113,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
       refireDelay: 40,
       shootSound: this.pew,
       damageValue: 30,
+      energyCost: 30,
     };
 
     for (var i = 0; i < this.weaponSystems.length; i++) {
@@ -138,10 +127,15 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
   }
   shoot(weaponNumber) {
     let ws = this.weaponSystems[weaponNumber];
+
+    // Check if the weapon is on cooldown
     if (ws.clock > ws.lastTick + ws.refireDelay) {
-      ws.shootSound.play();
-      this.scene.getBulletManager().shoot(this, ws);
-      ws.lastTick = ws.clock;
+      if (this.energy > ws.energyCost) {
+        ws.shootSound.play();
+        this.scene.getBulletManager().shoot(this, ws);
+        ws.lastTick = ws.clock;
+        this.energy -= ws.energyCost;
+      }
     }
   }
   left() {
@@ -169,8 +163,11 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
     // Flicker the shield
     this.shield.alpha = 1;
 
-    // Take the damage
-    this.hp -= damageValue;
+    if (damageValue > 0) {
+      // Take the damage
+      this.hp -= damageValue;
+      this.hitSound.play();
+    }
   }
 
   preUpdate(time, delta) {
@@ -185,8 +182,18 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
     this.controller.update(this);
 
     // If we aren't dead, regen HP slowly
-    if (this.hp < 100) {
-      this.hp += 0.1;
+    if (this.hp > 0) {
+      if (this.hp < 100) {
+        this.hp += 0.001;
+      } else {
+        this.hp = 100;
+      }
+
+      if (this.energy < 100) {
+        this.energy += 0.5;
+      } else {
+        this.energy = 100;
+      }
     }
 
     // Brake code
@@ -234,6 +241,10 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
     for (var i = 0; i < this.weaponSystems.length; i++) {
       this.weaponSystems[i].clock++;
     }
+
+    // update hp bar
+    this.hpBar.update(this.hp);
+    this.energyBar.update(this.energy);
   }
 
   postUpdate() {
@@ -267,17 +278,6 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
       this.hp = 100;
     }
-
-    // line up the hp bar, Do this AFTER checking hp so that when we move the hp bar doesn't look glitchy
-    this.hpBarBack.x = this.x;
-    this.hpBarBack.y = this.y - this.displayHeight / 2;
-
-    this.hpBarFront.x =
-      this.x +
-      ((this.hp / 100) * this.displayWidth) / 2 -
-      this.displayWidth / 2;
-    this.hpBarFront.y = this.hpBarBack.y;
-    this.hpBarFront.displayWidth = (this.hp / 100) * this.displayWidth;
   }
   rotateTo(targetAngle) {
     this.targetAngle = targetAngle;
