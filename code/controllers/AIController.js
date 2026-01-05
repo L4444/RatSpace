@@ -1,6 +1,7 @@
 class AIController {
   constructor(scene) {
     this.scene = scene;
+    this.isAggressive = true;
   }
 
   update(p) {
@@ -16,23 +17,33 @@ class AIController {
       this.scene.getPlayer().y
     );
 
-    if (
+    if (p.energy >= 100) {
+      this.isAggressive = true;
+    }
+
+    if (p.energy <= 10) {
+      this.isAggressive = false;
+    }
+
+    // always face the player if possible
+    p.rotateTo(targetAngle + Math.PI / 2);
+
+    let isClose =
       Phaser.Math.Distance.Between(
         p.x,
         p.y,
         this.scene.getPlayer().x,
         this.scene.getPlayer().y
-      ) > 300
-    ) {
-      p.forward();
-    } else {
-      let faceAngle = targetAngle + Math.PI / 2;
-      // Then check if we are facing the player.
-      //if (Math.abs(faceAngle - p.rotation) < 1) {
-      p.shoot(1);
-      //}
-    }
+      ) < 300;
 
-    p.rotateTo(targetAngle + Math.PI / 2);
+    if (this.isAggressive) {
+      if (isClose) {
+        p.shoot(1);
+      } else {
+        p.forward();
+      }
+    } else {
+      p.back();
+    }
   }
 }
