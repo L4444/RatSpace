@@ -357,15 +357,5 @@ class GameScene extends Phaser.Scene {
         this.getPlayer().controller.cameraPos.y
       );
     }
-
-    this.statics[5].tint = 0x0000ff;
-    let distanceToAsteroid = Phaser.Math.Distance.Between(
-      this.getPlayer().x,
-      this.getPlayer().y,
-      this.statics[5].x,
-      this.statics[5].y
-    );
-
-    console.log(distanceToAsteroid);
   }
 }

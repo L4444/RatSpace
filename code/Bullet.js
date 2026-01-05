@@ -16,13 +16,29 @@ class Bullet extends Phaser.Physics.Arcade.Sprite {
     this.scene = scene;
 
     // Technically you don't need to intialise variables in JS, but I like to do that for sanity reasons.
-    this.lifetime = 0;
+    this.currentLifetime = 0;
+    this.totalLifetime = 0;
   }
-
   preUpdate(time, delta) {
-    this.lifetime--;
+    this.currentLifetime--;
 
-    if (this.lifetime <= 0) {
+    // The fading code I pulled out of copilot.
+    // These values "look the best". Don't touch for now.
+    const fadeStart = 0.3; // fade during last 10% of life
+    const t = this.currentLifetime / this.totalLifetime; // goes 1 → 0
+
+    if (t > fadeStart) {
+      // Not in fade window yet → stay fully visible
+      this.alpha = 1;
+    } else {
+      // Normalize t inside the fade window (1 → 0)
+      const x = t / fadeStart;
+
+      // Exponential fade
+      this.alpha = Math.exp((x - 1) * 2);
+    }
+
+    if (this.currentLifetime <= 0) {
       this.disable();
     }
   }
@@ -43,7 +59,8 @@ class Bullet extends Phaser.Physics.Arcade.Sprite {
 
     // The lifetime should be determined by the "range", faster bullets have less lifetime
     // Multiply by 50 to get the rough distance
-    this.lifetime = (bulletData.range / bulletData.speed) * 50;
+    this.totalLifetime = (bulletData.range / bulletData.speed) * 50;
+    this.currentLifetime = this.totalLifetime;
 
     // Use vectors to set the path of the bullet, use the X axis to align with the player ship.
     let v = new Phaser.Math.Vector2(0, -bulletData.speed);
