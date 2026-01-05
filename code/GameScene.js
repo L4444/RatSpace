@@ -68,7 +68,10 @@ class GameScene extends Phaser.Scene {
 
     // load hit sounds
     this.load.audio("hitPlayerSound", "sounds/hitPlayerSound.wav");
-    this.load.audio("hitEnemySound", "sounds/Laser_01.wav");
+    this.load.audio(
+      "hitEnemySound",
+      "sounds/clip-hitmarker-sound-effect-sound.wav"
+    );
 
     // Load data
     this.load.json("playerData", "data/ships/playerShip.json");

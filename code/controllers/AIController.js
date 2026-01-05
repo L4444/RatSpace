@@ -37,7 +37,11 @@ class AIController {
         this.scene.getPlayer().y
       ) < 500
     ) {
-      p.shoot(1);
+      let faceAngle = targetAngle + Math.PI / 2;
+      // Then check if we are facing the player.
+      if (Math.abs(faceAngle - p.rotation) < 1) {
+        p.shoot(1);
+      }
     }
 
     p.rotateTo(targetAngle + Math.PI / 2);

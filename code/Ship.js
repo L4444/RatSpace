@@ -23,13 +23,13 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
       color: [0xff0000],
       colorEase: "quad.out",
-      lifespan: 200,
+      lifespan: 500,
 
       angle: 180,
       scale: { start: 0.2, end: 0.1, ease: "sine.out" },
       alpha: { start: 1, end: 0 },
 
-      speed: 300,
+      speed: 400,
       advance: 2000,
       blendMode: "ADD",
     });
@@ -46,14 +46,13 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
     this.tX = 0.0;
     this.tY = 0.0;
 
+    // TODO: tie the sounds to the weapons not the ship, then give enemies different weapons
     if (isEnemy) {
       this.shootSound = scene.sound.add("shoot2", { loop: false });
-      /// Workaround, tie the hitsound to the sprite so it can be called in the collision detection code
       this.hitSound = scene.sound.add("hitEnemySound", { loop: false });
-      this.hitSound.volume = 0.1;
+      this.hitSound.volume = 0.2;
     } else {
       this.shootSound = scene.sound.add("shoot1", { loop: false });
-      /// Workaround, tie the hitsound to the sprite so it can be called in the collision detection code
       this.hitSound = scene.sound.add("hitPlayerSound", { loop: false });
     }
 
@@ -63,9 +62,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
     scene.add.existing(this);
     scene.physics.add.existing(this);
 
-    // TODO: Adjust this to account for different image sizes
     // -- Get the measurements of the ship spread and create a hit circle
-
     let w = this.displayWidth;
     let h = this.displayHeight;
     this.body.setCircle(w / 2, 0, 0);
@@ -110,10 +107,10 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
       spriteName: "bigPew",
       speed: 800,
       range: 150,
-      refireDelay: 40,
+      refireDelay: 10,
       shootSound: this.pew,
       damageValue: 30,
-      energyCost: 30,
+      energyCost: 50,
     };
 
     for (var i = 0; i < this.weaponSystems.length; i++) {
@@ -252,7 +249,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
     this.shield.y = this.y;
 
     // move thruster with ship
-    let thr = new Phaser.Math.Vector2(0, 31);
+    let thr = new Phaser.Math.Vector2(0, 70);
     thr.rotate(this.rotation);
 
     this.particleContainer.x = this.x + thr.x;
