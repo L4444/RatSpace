@@ -37,6 +37,7 @@ class CollisionManager {
       bulletManager.getBullets(),
       function (hitStatic, hitBullet, body1, body2) {
         hitBullet.disable();
+        console.log("bullet hit asteroid");
       }
     );
   }

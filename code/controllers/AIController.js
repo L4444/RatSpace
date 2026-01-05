@@ -24,7 +24,7 @@ class AIController {
         this.scene.getPlayer().y
       ) > 300
     ) {
-      p.forward();
+      // p.forward();
     } else {
       p.brake();
     }
@@ -35,7 +35,7 @@ class AIController {
         p.y,
         this.scene.getPlayer().x,
         this.scene.getPlayer().y
-      ) < 500
+      ) < 100
     ) {
       let faceAngle = targetAngle + Math.PI / 2;
       // Then check if we are facing the player.
