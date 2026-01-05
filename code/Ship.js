@@ -93,20 +93,20 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
     this.mg.volume = 0.1;
     this.weaponSystems[0] = {
       spriteName: "pew",
-      speed: 1200,
-      range: 100,
+      speed: 800,
+      range: 50,
       refireDelay: 2,
       shootSound: this.mg,
-      damageValue: 3,
-      energyCost: 5,
+      damageValue: 4,
+      energyCost: 3,
     };
 
     this.pew = scene.sound.add("shoot2", { loop: false });
     this.pew.volume = 0.5;
     this.weaponSystems[1] = {
       spriteName: "bigPew",
-      speed: 800,
-      range: 150,
+      speed: 300,
+      range: 100,
       refireDelay: 10,
       shootSound: this.pew,
       damageValue: 30,

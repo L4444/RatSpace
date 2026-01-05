@@ -41,6 +41,7 @@ class Bullet extends Phaser.Physics.Arcade.Sprite {
     this.setTexture(bulletData.spriteName);
     this.setCircle(this.width / 4, this.width / 4, this.width / 4);
 
+    // The lifetime should be determined by the "range", faster bullets have less lifetime
     this.lifetime = (bulletData.range / bulletData.speed) * 250;
 
     // Use vectors to set the path of the bullet, use the X axis to align with the player ship.
