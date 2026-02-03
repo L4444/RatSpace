@@ -17,7 +17,7 @@ var config = {
   width: gameScreen.width,
   height: gameScreen.height,
   physics: {
-    default: "arcade",
+    default: "matter",
     arcade: {
       x: 0,
       y: 0,

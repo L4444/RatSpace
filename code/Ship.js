@@ -1,8 +1,13 @@
-class Ship extends Phaser.Physics.Arcade.Sprite {
+class Ship extends Phaser.Physics.Matter.Sprite {
   static explosionSound;
 
   constructor(scene, spec, x, y, controller, isEnemy) {
     super(scene, x, y, spec.spriteName);
+
+    this.setFriction(0);
+    this.setFrictionStatic(0);
+    this.setFrictionAir(0.02);
+
     this.setDepth(SpriteLayer.SHIP);
     this.name = spec.spriteName;
 
@@ -154,16 +159,16 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
 
     // Brake code
     if (this.isBrake) {
-      this.body.setDrag(1000, 1000);
-      this.setAcceleration(0, 0); // Switch off the thruster.
+      //this.body.setDrag(1000, 1000);
+      //this.setAcceleration(0, 0); // Switch off the thruster.
       this.rotation = Phaser.Math.Angle.RotateTo(
         this.rotation,
         this.targetAngle,
-        this.spec.TURN_SPEED_FACTOR / 1000
+        this.spec.TURN_SPEED_FACTOR / 1000,
       );
     } else {
       // If we are not braking, don't drag.
-      this.body.setDrag(0, 0);
+      //this.body.setDrag(0, 0);
 
       let thrustBoost = 1;
       let maxSpeedBoost = 1;
@@ -180,7 +185,7 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
         this.rotation = Phaser.Math.Angle.RotateTo(
           this.rotation,
           this.targetAngle,
-          this.spec.TURN_SPEED_FACTOR / 1000
+          this.spec.TURN_SPEED_FACTOR / 1000,
         );
       }
 
@@ -189,8 +194,8 @@ class Ship extends Phaser.Physics.Arcade.Sprite {
       v.normalize();
       v.rotate(Phaser.Math.DegToRad(this.angle));
       v.scale(this.spec.THRUST_SPEED * thrustBoost);
-      this.body.setMaxSpeed(this.spec.MAX_SPEED * maxSpeedBoost);
-      this.setAcceleration(v.x, v.y); // Then Activate the thrusters!
+      //this.body.setMaxSpeed(this.spec.MAX_SPEED * maxSpeedBoost);
+      //this.setAcceleration(v.x, v.y); // Then Activate the thrusters!
     }
 
     // update hp bar

@@ -1,5 +1,6 @@
 class CollisionManager {
   constructor(scene, ships, projectileMananger, statics) {
+    /* OLD COLLISION CODE
     // 1) Check for ship to static (asteroid, wall etc.) collisions
     scene.physics.add.collider(
       ships,
@@ -40,5 +41,6 @@ class CollisionManager {
         hitProj.disable();
       }
     );
+    */
   }
 }

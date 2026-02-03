@@ -1,4 +1,4 @@
-class Wall extends Phaser.Physics.Arcade.Sprite {
+class Wall extends Phaser.Physics.Matter.Sprite {
   constructor(scene, spriteName, x, y, width, height) {
     super(scene, x, y, spriteName);
 

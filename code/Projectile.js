@@ -1,4 +1,4 @@
-class Projectile extends Phaser.Physics.Arcade.Sprite {
+class Projectile extends Phaser.Physics.Matter.Sprite {
   constructor(scene) {
     // pass in a "dummy sprite" when they are created, later on the texture gets set
     super(scene, 999, 999, "red");
@@ -68,7 +68,7 @@ class Projectile extends Phaser.Physics.Arcade.Sprite {
 
     this.setVelocity(
       v.x + parent.body.velocity.x,
-      v.y + parent.body.velocity.y
+      v.y + parent.body.velocity.y,
     );
 
     this.damage = projectileData.damageValue;

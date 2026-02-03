@@ -1,6 +1,10 @@
-class Asteroid extends Phaser.Physics.Arcade.Sprite {
+class Asteroid extends Phaser.Physics.Matter.Sprite {
   constructor(scene, spriteName, x, y, tint) {
     super(scene, x, y, spriteName);
+
+    this.setFriction(0);
+    this.setFrictionStatic(0);
+    this.setFrictionAir(0.02);
 
     // Manually add this to scene and physics (contructor doesn't do this for us)
     scene.add.existing(this);
